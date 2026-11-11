@@ -9,6 +9,8 @@
 
 The core installation has no model downloads or provider login. Generated `dist/`, dependency folders, and private video workspaces are ignored. Packages use ESM and explicit `.js` extensions for relative TypeScript imports so compiled output works in Node.
 
+Repository text uses LF on every platform, enforced by `.gitattributes` at checkout. Do not change formatter rules to accommodate a local CRLF checkout; honor the repository attributes.
+
 ## Make a focused change
 
 - Find the owner in the [architecture map](architecture.md).
