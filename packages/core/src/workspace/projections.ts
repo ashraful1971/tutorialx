@@ -152,6 +152,10 @@ export async function importWorkspaceProjection(input: {
     throw new Error('Job is not available in this workspace.');
   if (current.status.revision !== input.expectedRevision)
     throw new ProjectionRevisionConflict('Job revision changed before import.');
+  if (current.status.lifecycle === 'cancelled')
+    throw new ProjectionRevisionConflict(
+      'Resume the cancelled job explicitly before importing an edit.',
+    );
   const attempts = await repository.attempts(input.jobId);
   if (attempts.some((attempt) => attempt.status === 'running'))
     throw new ProjectionRevisionConflict('Pause active production before importing an edit.');
@@ -240,8 +244,8 @@ export async function importWorkspaceProjection(input: {
     status: {
       ...current.status,
       revision,
-      lifecycle: 'waiting',
-      waitReason: plan ? 'approval' : 'input',
+      lifecycle: current.status.lifecycle === 'paused' ? 'paused' : 'waiting',
+      waitReason: current.status.lifecycle === 'paused' ? null : plan ? 'approval' : 'input',
       delivery: null,
       completedStages: 0,
     },

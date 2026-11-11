@@ -287,3 +287,21 @@ it('rejects path escapes and redirected projection files', async () => {
     await expect(files.read('redirect/job.json')).rejects.toThrow('redirected');
   });
 });
+
+it('preserves a paused job and requires explicit resume before importing into a cancelled job', async () => {
+  await fixture(async ({ state, files, importFile }) => {
+    state.job.status.lifecycle = 'paused';
+    state.job.status.waitReason = null;
+    const paths = workspaceProjectionDocuments(state.job, state.plans[0]!);
+    const expected: Record<string, string | null> = {};
+    for (const path of Object.keys(paths))
+      expected[path] = (await files.read(path))?.content ?? null;
+    await publishWorkspaceProjections(files, state.job, state.plans[0]!, expected);
+    const brief = (await files.read('brief.md'))!.content;
+    await files.write('brief.md', brief, brief.replace('> Beginners', '> Paused readers'));
+    expect((await importFile('brief.md')).job.status.lifecycle).toBe('paused');
+    state.job.status.lifecycle = 'cancelled';
+    state.job.status.delivery = 'cancelled';
+    await expect(importFile('brief.md', 2)).rejects.toThrow('Resume the cancelled');
+  });
+});

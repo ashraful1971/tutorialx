@@ -47,6 +47,7 @@ import {
   sourceRegistrationSchema,
 } from './sources.js';
 import { captionTrackSchema, timelineSchema } from './timeline.js';
+import { stageDefinitionSchema, workflowGraphSchema } from './workflow.js';
 import { profileSchema, workspaceConfigSchema } from './workspace.js';
 
 export const PUBLIC_SCHEMAS = {
@@ -91,9 +92,11 @@ export const PUBLIC_SCHEMAS = {
   SourceManifest: sourceManifestSchema,
   SourceRegistration: sourceRegistrationSchema,
   StageAttempt: stageAttemptSchema,
+  StageDefinition: stageDefinitionSchema,
   Timeline: timelineSchema,
   VoiceResult: voiceResultSchema,
   WorkspaceConfig: workspaceConfigSchema,
+  WorkflowGraph: workflowGraphSchema,
 } as const;
 
 export type PublicSchemaName = keyof typeof PUBLIC_SCHEMAS;

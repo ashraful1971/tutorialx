@@ -22207,6 +22207,63 @@
       ],
       "additionalProperties": false
     },
+    "StageDefinition": {
+      "$id": "urn:tutorialx:schema:1:StageDefinition",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+        },
+        "kind": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "planning",
+            "production",
+            "quality",
+            "delivery"
+          ]
+        },
+        "inputDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "dependencies": {
+          "maxItems": 1000,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+          }
+        },
+        "requiredArtifactIds": {
+          "maxItems": 10000,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+          }
+        },
+        "required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "phase",
+        "inputDigest",
+        "dependencies",
+        "requiredArtifactIds",
+        "required"
+      ],
+      "additionalProperties": false
+    },
     "Timeline": {
       "$id": "urn:tutorialx:schema:1:Timeline",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -22843,6 +22900,82 @@
         "words",
         "providerRequestId",
         "actualUsdMicros"
+      ],
+      "additionalProperties": false
+    },
+    "WorkflowGraph": {
+      "$id": "urn:tutorialx:schema:1:WorkflowGraph",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "stages": {
+          "minItems": 1,
+          "maxItems": 10000,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+              },
+              "kind": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+              },
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "planning",
+                  "production",
+                  "quality",
+                  "delivery"
+                ]
+              },
+              "inputDigest": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "dependencies": {
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                }
+              },
+              "requiredArtifactIds": {
+                "maxItems": 10000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                }
+              },
+              "required": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "phase",
+              "inputDigest",
+              "dependencies",
+              "requiredArtifactIds",
+              "required"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "stages"
       ],
       "additionalProperties": false
     },

@@ -4,11 +4,11 @@ Checkpoint: 2026-11-11. Active OpenSpec change: `build-portable-video-production
 
 ## Current state
 
-16 of 98 tasks are complete: groups 1–3 and task 4.1. The foundation includes workspace/settings/source preparation, revision-aware projections/imports, runnable workspace/profile examples, and real SQLite metadata with revision history, attempt fencing, research records, events/outbox, shared usage reservations, and resource leases.
+17 of 98 tasks are complete: groups 1–3 and tasks 4.1–4.2. The foundation includes workspace/settings/source preparation, revision-aware projections/imports, runnable examples, real SQLite metadata/coordination, and pure workflow eligibility/transitions with approval/input/fencing/delivery gates.
 
 This is the foundation. Rendering, narration, browser recording, persistent orchestration, and an end-to-end video CLI are not implemented yet. The change remains active; sync final specifications and archive after its implementation is complete.
 
-Validation at this checkpoint: `pnpm check` passed (build, type checking, lint, dependency boundaries, 155 tests, schema drift checks, and package audits). SQLite tests use real disk databases and independent connections, including migration/reopen, atomic rollback, revision/fencing conflicts, budgets/leases, and an edited-brief import/reload. Tested locally on Linux/Node 24; CI covers the declared platform/LTS matrix. Provider/media tests remain fixtures, not live speech/render service verification.
+Validation at this checkpoint: `pnpm check` passed (build, type checking, lint, dependency boundaries, 169 tests, schema drift checks, and package audits). SQLite uses real disk databases/independent connections. Workflow tests cover illegal transitions, approval/input/fencing gates, missing accepted outputs, paused/cancelled revisions, and honest delivery outcomes. Existing public schemas remain unchanged; new schemas are additive. Tested locally on Linux/Node 24; CI covers the declared matrix. Provider/media checks remain fixtures, not live service verification.
 
 ## Continue on another device
 
@@ -27,7 +27,7 @@ With the OpenSpec CLI available, ask your agent:
 
 ```text
 Use openspec-apply-change for build-portable-video-production-system.
-Read docs/implementation-handoff.md and resume at task 4.2.
+Read docs/implementation-handoff.md and resume at task 4.3.
 Apply, verify, and commit/push completed tasks as instructed by AGENTS.md.
 Sync the specs and archive the change when all implementation tasks are complete.
 ```
@@ -36,7 +36,7 @@ The skill lives at `.agents/skills/openspec-apply-change/SKILL.md`. All planning
 
 ## Next task
 
-Task 4.2 implements pure stage eligibility/transitions and job lifecycle/wait/delivery outcomes. Verify planning/approval gates, missing prerequisites, failures, cancellation, and invalidation reject illegal transitions. Keep domain policy in core and metadata transactions in adapters. See `docs/persistence.md` and ADR 0002 for SQLite ownership/runtime requirements; `tests/conformance/repository-suite.ts` is reusable for the later PostgreSQL backend.
+Task 4.3 implements local artifact staging, checksums, manifest validation, atomic acceptance, and orphan retention. Verify partial writes/crashes before metadata commit never become successful outputs. Keep workflow policy in core and bytes/metadata effects in adapters. See `docs/workflow.md`, `docs/persistence.md`, and ADR 0002; `tests/conformance/repository-suite.ts` is reusable for PostgreSQL.
 
 Provider extension guidance is in `docs/providers.md`, `docs/contract-evolution.md`, and `examples/providers/README.md`. The example imports only the public contracts and Node built-ins; its public registration/conformance exercise lives in `tests/conformance/recorded-voice.test.ts`.
 
