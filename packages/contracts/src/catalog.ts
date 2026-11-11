@@ -18,6 +18,12 @@ import {
   stageAttemptSchema,
 } from './execution.js';
 import {
+  currentDeliveryPointerSchema,
+  stageInputSchema,
+  stageLineageSchema,
+  workflowSnapshotSchema,
+} from './lineage.js';
+import {
   jobBriefSchema,
   jobCreationSchema,
   planRevisionSchema,
@@ -65,6 +71,7 @@ export const PUBLIC_SCHEMAS = {
   CaptionTrack: captionTrackSchema,
   CaptureResult: captureResultSchema,
   CostEstimate: costEstimateSchema,
+  CurrentDeliveryPointer: currentDeliveryPointerSchema,
   DeliveryManifest: deliveryManifestSchema,
   EffectiveSettings: effectiveSettingsSchema,
   EvidenceRecord: evidenceRecordSchema,
@@ -94,12 +101,15 @@ export const PUBLIC_SCHEMAS = {
   SourceManifest: sourceManifestSchema,
   SourceRegistration: sourceRegistrationSchema,
   StageAttempt: stageAttemptSchema,
+  StageInput: stageInputSchema,
+  StageLineage: stageLineageSchema,
   StagedArtifact: stagedArtifactSchema,
   StageDefinition: stageDefinitionSchema,
   Timeline: timelineSchema,
   VoiceResult: voiceResultSchema,
   WorkspaceConfig: workspaceConfigSchema,
   WorkflowGraph: workflowGraphSchema,
+  WorkflowSnapshot: workflowSnapshotSchema,
 } as const;
 
 export type PublicSchemaName = keyof typeof PUBLIC_SCHEMAS;

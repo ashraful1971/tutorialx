@@ -23,6 +23,9 @@ import {
   sourceManifestSchema,
   stageAttemptSchema,
   timestampSchema,
+  type WorkflowRepository,
+  type WorkflowSnapshot,
+  workflowSnapshotSchema,
 } from '@tutorialx/contracts';
 import { MetadataConflict, MetadataPolicyError, type SqliteDatabase } from './database.js';
 
@@ -65,7 +68,12 @@ function page(cursor: string | null, limit: number) {
 export function sqliteRepository(
   db: SqliteDatabase,
   base: Pick<JobRepository, 'descriptor' | 'validateConfiguration' | 'readiness' | 'estimate'>,
-): { repository: JobRepository; research: ResearchRepository; revisions: JobRevisionRepository } {
+): {
+  repository: JobRepository;
+  research: ResearchRepository;
+  revisions: JobRevisionRepository;
+  workflow: WorkflowRepository;
+} {
   const readJob = (id: string): JobRecord | null => {
     db.requireReady();
     const value = db.decode<JobRecord>(
@@ -82,12 +90,23 @@ export function sqliteRepository(
   };
   function commit(
     input: JobMutation,
-    records: { sources: readonly SourceManifest[]; evidence: readonly EvidenceRecord[] },
+    records: {
+      sources: readonly SourceManifest[];
+      evidence: readonly EvidenceRecord[];
+      workflow?: WorkflowSnapshot;
+    },
   ) {
     db.requireReady();
     idSchema.parse(input.jobId);
     positiveIntegerSchema.parse(input.expectedRevision);
     const job = jobRecord(input.job);
+    const workflow =
+      records.workflow === undefined ? null : workflowSnapshotSchema.parse(records.workflow);
+    if (
+      workflow &&
+      (workflow.jobId !== input.jobId || workflow.jobRevision !== job.status.revision)
+    )
+      throw new MetadataConflict('Workflow snapshot must bind the committed job revision.');
     if (
       job.brief.id !== input.jobId ||
       job.brief.workspaceId !== db.workspaceId ||
@@ -358,6 +377,32 @@ export function sqliteRepository(
         job.status.revision,
         JSON.stringify(job),
       );
+      if (workflow) {
+        for (const record of workflow.lineage) {
+          for (const [id, digest] of Object.entries(record.sourceDigests))
+            if (digest !== null) {
+              const source = db.decode<SourceManifest>(
+                db.get('SELECT json FROM sources WHERE id=? AND job_id=?', id, input.jobId),
+              );
+              if (source?.contentHash !== digest)
+                throw new MetadataConflict('Workflow source fingerprint is missing or stale.');
+            }
+          for (const [id, digest] of Object.entries(record.artifactDigests))
+            if (digest !== null) {
+              const artifact = db.decode<{ digest: string }>(
+                db.get('SELECT json FROM artifacts WHERE id=? AND job_id=?', id, input.jobId),
+              );
+              if (artifact?.digest !== digest)
+                throw new MetadataConflict('Workflow artifact fingerprint is missing or stale.');
+            }
+        }
+        db.run(
+          'INSERT INTO workflow_revisions(job_id,revision,json) VALUES (?,?,?)',
+          input.jobId,
+          job.status.revision,
+          JSON.stringify(workflow),
+        );
+      }
     });
   }
   const repository: JobRepository = {
@@ -493,6 +538,31 @@ export function sqliteRepository(
     revisions: {
       async revisions(id) {
         return rows('revisions', id, (value) => jobRecord(value as JobRecord));
+      },
+    },
+    workflow: {
+      async commitWorkflow(mutation, snapshot, research = { sources: [], evidence: [] }) {
+        commit(mutation, { ...research, workflow: snapshot });
+      },
+      async readWorkflow(jobId, revision) {
+        const job = readJob(jobId);
+        if (!job) return null;
+        if (revision !== undefined) positiveIntegerSchema.parse(revision);
+        const row =
+          revision === undefined
+            ? db.get(
+                'SELECT json FROM workflow_revisions WHERE job_id=? ORDER BY revision DESC LIMIT 1',
+                jobId,
+              )
+            : db.get(
+                'SELECT json FROM workflow_revisions WHERE job_id=? AND revision=?',
+                jobId,
+                revision,
+              );
+        const value = row ? workflowSnapshotSchema.parse(JSON.parse(String(row.json))) : null;
+        return value && revision === undefined && value.jobRevision < job.brief.revision
+          ? null
+          : value;
       },
     },
   };

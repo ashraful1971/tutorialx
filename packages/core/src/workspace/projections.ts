@@ -1,4 +1,5 @@
 import {
+  type DeliveryPointerStore,
   executionPolicySchema,
   type JobBrief,
   type JobRecord,
@@ -144,6 +145,7 @@ export async function importWorkspaceProjection(input: {
   jobId: string;
   expectedRevision: number;
   path: string;
+  pointer?: DeliveryPointerStore;
   now(): string;
 }): Promise<{ job: JobRecord; plan: PlanRevision | null; projectionConflicts: string[] }> {
   const { repository, files } = input;
@@ -260,25 +262,35 @@ export async function importWorkspaceProjection(input: {
         throw new ProjectionRevisionConflict(`New revision path already exists: ${path}.`);
       expected[path] = null;
     }
-  await repository.commit({
-    jobId: input.jobId,
-    expectedRevision: current.status.revision,
-    job,
-    fence: null,
-    attempts: attempts.map((attempt) => ({
-      ...attempt,
-      status: 'invalidated',
-      lease: null,
-      waitReason: null,
-      finishedAt: input.now(),
-    })),
-    artifacts: [],
-    plans: plan ? [plan] : [],
-    approvals: [],
-    operations: [],
-    events: [],
-    dispatch: [],
-  });
+  if (!input.pointer && (await files.read('output/current.json')))
+    throw new ProjectionRevisionConflict(
+      'An existing delivery pointer requires its shared guard before importing a revision.',
+    );
+  const guard = await input.pointer?.lock();
+  try {
+    await guard?.invalidate(current.status.revision, revision);
+    await repository.commit({
+      jobId: input.jobId,
+      expectedRevision: current.status.revision,
+      job,
+      fence: null,
+      attempts: attempts.map((attempt) => ({
+        ...attempt,
+        status: 'invalidated',
+        lease: null,
+        waitReason: null,
+        finishedAt: input.now(),
+      })),
+      artifacts: [],
+      plans: plan ? [plan] : [],
+      approvals: [],
+      operations: [],
+      events: [],
+      dispatch: [],
+    });
+  } finally {
+    await guard?.release();
+  }
   const projectionConflicts: string[] = [];
   for (const [path, content] of Object.entries(after)) {
     try {

@@ -43,3 +43,24 @@ export type FrameRate = z.infer<typeof frameRateSchema>;
 export function hasUniqueIds(values: readonly { id: string }[]): boolean {
   return new Set(values.map((value) => value.id)).size === values.length;
 }
+
+/** Project canonical JSON v1: sorted UTF-16 object keys, ordered arrays, JSON scalar encoding. */
+export function canonicalJson(value: z.infer<typeof jsonObjectSchema>): string {
+  const encode = (entry: unknown): string => {
+    if (Array.isArray(entry)) return `[${entry.map(encode).join(',')}]`;
+    if (entry !== null && typeof entry === 'object')
+      return `{${Object.keys(entry)
+        .sort()
+        .map((key) => `${JSON.stringify(key)}:${encode((entry as Record<string, unknown>)[key])}`)
+        .join(',')}}`;
+    if (
+      entry === null ||
+      typeof entry === 'string' ||
+      typeof entry === 'boolean' ||
+      (typeof entry === 'number' && Number.isFinite(entry))
+    )
+      return JSON.stringify(entry);
+    throw new TypeError('Canonical fingerprints require JSON values.');
+  };
+  return encode(value);
+}

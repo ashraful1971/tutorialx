@@ -33,7 +33,7 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 - [x] 4.1 Implement SQLite migrations/repository semantics for jobs, revisions, stages, attempts, approvals, evidence, usage, locks, events, and dispatch outbox; verify migration, transactional revision conflict, and repository conformance fixtures.
 - [x] 4.2 Implement pure stage eligibility/transitions and job lifecycle/wait/delivery outcomes; verify planning, approval, missing prerequisite, failure, cancellation, and invalidation transitions reject illegal operations.
 - [x] 4.3 Implement local artifact staging, checksums, manifest validation, atomic acceptance, and orphan retention; verify partial writes and crashes before metadata commit never become successful stage artifacts.
-- [ ] 4.4 Implement input lineage/fingerprints and dependent invalidation; verify caption-style, narration, source, and aspect-ratio changes invalidate only affected work with no stale final-delivery pointer.
+- [x] 4.4 Implement input lineage/fingerprints and dependent invalidation; verify caption-style, narration, source, and aspect-ratio changes invalidate only affected work with no stale final-delivery pointer.
 - [ ] 4.5 Implement operation receipts, failure classes, reservation/actual usage accounting, bounded retries/deadlines, and pause/cancel semantics; verify concurrent budget requests, uncertain external outcomes, and cancellation preserve correct state.
 - [ ] 4.6 Document state ownership, readable file projections, and local recovery rules; verify an interrupted fixture is inspectable and recoverable without reading private database tables manually.
 

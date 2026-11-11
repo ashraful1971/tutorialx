@@ -54,7 +54,7 @@ export function sqliteDatabase(database: DatabaseSync, workspaceId: string, now:
   function initialize() {
     if (closed) throw new Error('SQLite persistence is closed.');
     const version = Number(get('PRAGMA user_version')?.user_version);
-    if (version > 1 || version < 0)
+    if (version > 2 || version < 0)
       throw new Error(`Unsupported SQLite schema version ${version}; use a compatible engine.`);
     database.exec('PRAGMA busy_timeout=5000; PRAGMA foreign_keys=ON;');
     transaction(() => {
@@ -63,9 +63,14 @@ export function sqliteDatabase(database: DatabaseSync, workspaceId: string, now:
       if (current === 0) {
         database.exec(migration);
         run('INSERT INTO workspace(id) VALUES (?)', workspaceId);
-      } else if (current !== 1) throw new Error('Unsupported SQLite schema version.');
+      } else if (current !== 1 && current !== 2)
+        throw new Error('Unsupported SQLite schema version.');
       if (get('SELECT id FROM workspace')?.id !== workspaceId)
         throw new MetadataPolicyError('Database belongs to another workspace.');
+      if (current < 2)
+        database.exec(
+          `CREATE TABLE workflow_revisions (job_id TEXT NOT NULL, revision INTEGER NOT NULL, json TEXT NOT NULL, PRIMARY KEY(job_id,revision), FOREIGN KEY(job_id,revision) REFERENCES revisions(job_id,revision)) STRICT; PRAGMA user_version=2;`,
+        );
     });
     database.exec('PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA trusted_schema=OFF;');
     initialized = true;

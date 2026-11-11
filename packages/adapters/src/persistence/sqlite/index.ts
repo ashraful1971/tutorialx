@@ -3,6 +3,7 @@ import type {
   JobRevisionRepository,
   ResearchRepository,
   ResourceCoordinator,
+  WorkflowRepository,
 } from '@tutorialx/contracts';
 import { idSchema } from '@tutorialx/contracts';
 import { sqliteCoordination } from './coordination.js';
@@ -14,6 +15,7 @@ export interface SqlitePersistence {
   research: ResearchRepository;
   revisions: JobRevisionRepository;
   coordinator: ResourceCoordinator;
+  workflow: WorkflowRepository;
 }
 
 /** SQLite is loaded only when selected. Node 22.12 requires --experimental-sqlite. */
@@ -45,7 +47,7 @@ export async function createSqlitePersistence(options: {
     descriptor: {
       id: 'sqlite',
       kind: 'persistence',
-      version: '1.0.0',
+      version: '1.1.0',
       contractVersion: 1,
       configurationSchema: {
         type: 'object',
@@ -57,6 +59,7 @@ export async function createSqlitePersistence(options: {
         features: [
           'metadata:transactions',
           'metadata:revisions',
+          'metadata:workflow-inputs',
           'attempt:fencing',
           'dispatch:outbox',
           'records:research',

@@ -1,6 +1,6 @@
 # Local SQLite metadata
 
-`createSqlitePersistence({ filename, workspaceId, now })` from `@tutorialx/adapters` supplies the public job repository, research repository, revision-history reader, and resource coordinator. All four ports share one connection/transaction authority. Closing `repository` closes the entire store. Use a private workspace path such as `.tutorialx/state.sqlite`; initialize the parent workspace first.
+`createSqlitePersistence({ filename, workspaceId, now })` from `@tutorialx/adapters` supplies the public job repository, research repository, workflow repository, revision-history reader, and resource coordinator. All five ports share one connection/transaction authority. Closing `repository` closes the entire store. Use a private workspace path such as `.tutorialx/state.sqlite`; initialize the parent workspace first.
 
 ```ts
 import { createSqlitePersistence } from '@tutorialx/adapters';
@@ -12,7 +12,7 @@ const store = await createSqlitePersistence({
 });
 await store.repository.initialize();
 try {
-  // Application services receive store.repository / research / coordinator explicitly.
+  // Application services receive store.repository / research / workflow / coordinator explicitly.
 } finally {
   await store.repository.close();
 }
@@ -22,11 +22,11 @@ SQLite is loaded dynamically only when this adapter is selected. It uses the bui
 
 ## Transactions and revisions
 
-Initialization applies schema version one in a transaction and retains a workspace ownership marker. Repeated/concurrent initialization is safe. A future schema or another workspace identity refuses mutation. WAL, foreign keys, a five-second busy timeout, full synchronous durability, and short `BEGIN IMMEDIATE` write transactions are enabled for supported databases.
+Initialization applies transactional migrations and retains a workspace ownership marker. Version one establishes the metadata tables; version two adds immutable workflow input snapshots without rewriting existing records. Repeated/concurrent initialization is safe. A future schema or another workspace identity refuses mutation. WAL, foreign keys, a five-second busy timeout, full synchronous durability, and short `BEGIN IMMEDIATE` write transactions are enabled for supported databases.
 
 The schema owns jobs, immutable job revisions, stage/attempt records, immutable artifact/plan/approval/source/evidence records, operation receipts, monotonic event cursors, the dispatch outbox, usage reservations, and resource leases. Runtime records are validated on write and load. Database migrations and portable record schema versions are independent.
 
-`JobRepository.commit` atomically compares the expected revision, advances the job by one revision, and writes associated records/outbox entries. A changed brief must receive the new revision. Plan and evidence history cannot be silently rewritten. `ResearchRepository.commitResearch` joins source/evidence changes to that same job transaction; evidence must match the registered source fingerprint. `JobRevisionRepository.revisions` reads retained job history. These are additive public ports, leaving the existing `JobRepository` method contract intact.
+`JobRepository.commit` atomically compares the expected revision, advances the job by one revision, and writes associated records/outbox entries. A changed brief must receive the new revision. Plan and evidence history cannot be silently rewritten. `ResearchRepository.commitResearch` joins source/evidence changes to that same job transaction; evidence must match the registered source fingerprint. `JobRevisionRepository.revisions` reads retained job history. `WorkflowRepository.commitWorkflow` saves bound graph/input lineage and optional source/evidence updates in the owning job transaction; `readWorkflow` supports current-compatible and explicit historical reads. See [selective invalidation](lineage.md). These are additive public ports, leaving the existing `JobRepository` method contract intact.
 
 Running attempts commit success only with their current unexpired fencing token and ownership of the latest stage attempt. Lease tokens cannot move backward, and ownership changes require a newer token. A succeeded attempt cannot silently change its outputs, and output artifact IDs must exist in the same job. Metadata persistence does not probe media bytes: the [artifact acceptance service](artifacts.md) verifies and publishes bytes before committing successful metadata. Approval records are historical data here; application authorization and stage eligibility remain separate gates.
 
