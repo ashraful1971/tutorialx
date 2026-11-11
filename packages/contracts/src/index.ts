@@ -17,6 +17,7 @@ export * from './providers/media.js';
 export * from './providers/responses.js';
 export * from './providers/selection.js';
 export * from './quality.js';
+export * from './repositories.js';
 export * from './settings.js';
 export * from './source-registration.js';
 export * from './sources.js';

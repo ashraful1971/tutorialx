@@ -19,3 +19,5 @@ Follow [the recorded-voice example](../examples/providers/README.md), implement 
 Declare capabilities conservatively. Adding a new feature string does not change the meaning of an existing string. Unknown required features produce an incompatibility, not a guessed equivalent. If a feature's semantics must change, use a new feature identity and review contract/version effects. Missing word timing remains `null`; declaring timestamps would create a capability claim and corresponding conformance obligations.
 
 Simulated fixture results prove only the behavior exercised. A hosted service, optional speech runtime, actual spoken-word quality, and alignment each need their own named integration evidence before being described as supported production paths.
+
+The SQLite addition introduces `ResearchRepository` and `JobRevisionRepository` as separate public ports. Research records share the owning job transaction through `commitResearch`; existing `JobRepository` consumers/implementations retain their original methods. The local database migration version starts at one and does not change portable record schemas.
