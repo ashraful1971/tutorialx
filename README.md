@@ -4,7 +4,7 @@ An open-source video-production engine designed to work through an installable a
 
 ## Current status
 
-Active implementation. The package workspace and code-quality checks are available. Video-production commands and the installable TutorialX skill are not ready yet. Follow the [implementation checklist](openspec/changes/build-portable-video-production-system/tasks.md) for verified progress; unchecked tasks are not shipped features.
+Active implementation. Public package APIs support workspace initialization, profile/settings resolution, source registration, provider negotiation, and revision-aware projection services. Run the [workspace example](examples/workspaces/README.md) to create a sample job in a dedicated folder or an existing app. Video-production commands, the concrete durable job database, and the installable TutorialX skill are not ready yet. Follow the [implementation checklist](openspec/changes/build-portable-video-production-system/tasks.md) for verified progress; unchecked tasks are not shipped features.
 
 ## Develop locally
 
@@ -30,7 +30,7 @@ Useful commands:
 | `pnpm check` | Run the required local quality checks |
 | `pnpm package:audit` | Inspect package dry-runs for unintended files |
 
-See the [architecture](docs/architecture.md), [contributor guide](docs/contributing.md), and [design](openspec/changes/build-portable-video-production-system/design.md).
+See the [architecture](docs/architecture.md), [contributor guide](docs/contributing.md), [workspace APIs and layout](docs/workspaces.md), and [design](openspec/changes/build-portable-video-production-system/design.md).
 
 ## Content and credentials
 

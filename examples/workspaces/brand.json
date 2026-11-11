@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-11-11T00:00:00Z",
+  "revision": 1,
+  "sourceIds": [],
+  "notes": "Authored TutorialX configuration example; contains no private assets or credentials.",
+  "id": "example_brand",
+  "kind": "brand",
+  "name": "TutorialX example",
+  "settings": {
+    "brand": {
+      "name": "TutorialX example",
+      "primaryColor": "#176bff"
+    }
+  }
+}
