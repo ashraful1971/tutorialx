@@ -2,6 +2,8 @@
 
 `@tutorialx/contracts` is the single source for runtime schemas and TypeScript record types. Public records carry `schemaVersion: 1`, a stable path-safe identity, and a UTC creation timestamp. Schemas reject unknown fields and unsupported versions. They do not coerce strings into numbers or execute data found in references.
 
+See [contract evolution](contract-evolution.md) for compatibility review, versioning, and explicit migration rules.
+
 The planning contracts cover workspace configuration, versioned product/brand/preset profiles, complete effective settings and partial overlays, briefs, source/evidence manifests, research, scene plans, approvals, and batch topic manifests. Partial overlays are validated before merging and the complete effective settings are validated again afterward. Validation does not grant permission: the engine must still enforce source roots, policy ceilings, factual evidence, revision ownership, and approval origin.
 
 Use integer microseconds for media time and integer millionths of a US dollar for usage/budget amounts. These have separate named schemas even though both serialize as safe integers. Frame rate is a numerator/denominator pair. A source path is interpreted only by the scoped source adapter; accepting its shape does not permit arbitrary filesystem access.

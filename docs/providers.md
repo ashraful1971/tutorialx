@@ -2,6 +2,8 @@
 
 Providers implement one responsibility, not a universal generation method. Import their interfaces and schemas from `@tutorialx/contracts`.
 
+For a complete extension exercise, see the [recorded-voice provider](../examples/providers/README.md) and [contract evolution guide](contract-evolution.md).
+
 | Responsibility | Port |
 | --- | --- |
 | Agent task execution | `AgentRunner` |
