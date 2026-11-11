@@ -7,6 +7,7 @@ export * from './common.js';
 export * from './delivery.js';
 export * from './execution.js';
 export * from './planning.js';
+export * from './projections.js';
 export * from './providers/agents.js';
 export * from './providers/conformance.js';
 export * from './providers/coordination.js';

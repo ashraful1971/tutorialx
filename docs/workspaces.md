@@ -25,7 +25,7 @@ project/
 
 Existing application files and root ignore rules are preserved. Configuration is published without replacement, so repeated or concurrent initialization retains one identity. Reinitialization repairs missing managed directories and refuses an attempted content-root change or an incompatible/malformed existing config. Moving content requires a later explicit migration.
 
-Each job receives a generated stable ID before its title is sanitized into a short display slug. Identical titles create independent folders; files from existing jobs are never overwritten. `job.json` currently contains the validated brief and `brief.md` provides a readable summary. These functions prepare the workspace files; durable workflow state, projections/import, and transport commands are separate tasks and are not available yet.
+Each job receives a generated stable ID before its title is sanitized into a short display slug. Identical titles create independent folders; files from existing jobs are never overwritten. Initial directory preparation writes the validated brief to `job.json` and a readable `brief.md` summary. Repository-backed projection services then produce revision-aware files as described below. The concrete durable job database and transport commands are separate tasks.
 
 ## Private content and ignore rules
 
@@ -61,3 +61,22 @@ References are fingerprinted from bounded reads. Files use a SHA-256 byte digest
 Copied sources are written to `input/sources/<source-id>/files/`, with a checksummed `snapshot.json` inventory and a `source.json` record. The source manifest retains the original reference and attribution; `snapshotArtifactId` identifies the copied inventory. Returned snapshot artifacts still need normal stage acceptance. References store only their record. Source IDs are claimed exclusively, so duplicate registration identities cannot replace existing files. Failed copies are removed from their newly claimed source directory. Snapshots are immutable by convention; original changes never rewrite them.
 
 Defaults are 16 MiB per file, 64 MiB per source, 10,000 entries, and 32 levels of nesting. Composition code may choose explicit smaller/larger bounds. Registration is local input preparation, not document extraction, factual verification, speech synthesis, or execution authority. Source content remains data, including any apparent instructions inside it. Portable export/import will materialize/remap original path references in its later implementation.
+
+## Review and import projections
+
+`workspaceProjectionDocuments`, `inspectWorkspaceProjections`, `publishWorkspaceProjections`, and `importWorkspaceProjection` operate through the public repository/files ports. `createLocalProjectionFiles(jobDirectory)` supplies real local file access with contained paths, SHA-256 inspection hashes, and exclusive compare-before-write updates. Local projection files are bounded to 4 MiB. A leftover `.tutorialx-lock` after a process crash blocks replacement; confirm its owner has stopped and preserve the edited file before removing that lock manually.
+
+Repository-backed files include:
+
+| File | Meaning |
+| --- | --- |
+| `brief.md` | Editable title/topic/audience/instructions in blockquotes, plus validated JSON metadata and base revision |
+| `job.json` | Editable brief inside a versioned projection envelope; projected status is read-only |
+| `plan/revisions/<n>/plan.json` | Editable plan inside a base-revision envelope |
+| `plan/revisions/<n>/storyboard.md` | Readable scene narration/visual review; submit edits through `plan.json` |
+
+Publishing requires the exact bytes inspected previously (or an absent file). It never implicitly discards an external edit. Initial directory-preparation files can be replaced with repository projections only after verifying the original generated brief/summary; unfamiliar existing bytes must be reviewed/imported first. Inspection surfaces changed files, including review-only Markdown, rather than silently refreshing them.
+
+An explicit import validates schema, identity, base revision, immutable metadata, and workspace policy. Conflicting edits in another projection block the import. Stale files, attempted status/approval changes, unknown fields, and active production are refused. Successful imports commit through `JobRepository` with an expected revision, preserve historical plans/approvals, invalidate prior attempts, clear delivery readiness, and wait for a new plan or approval. Import never mints approval or dispatches production. Historical plan projections are restored to their accepted content while the edit appears in its new revision.
+
+File refresh follows the metadata commit. If a concurrent editor changes a file then, the response returns the accepted job revision plus `projectionConflicts`; preserve and reconcile those files instead of repeating the already committed import. Files remain projections of repository state. Tests use real filesystem operations and a fixture implementation of the repository port; SQLite persistence is implemented separately in task 4.1.

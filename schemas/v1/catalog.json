@@ -7416,6 +7416,974 @@
         }
       }
     },
+    "JobProjection": {
+      "$id": "urn:tutorialx:schema:1:JobProjection",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "baseJobRevision": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "document": {
+          "type": "object",
+          "properties": {
+            "schemaVersion": {
+              "type": "number",
+              "const": 1
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+            },
+            "workspaceId": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+            },
+            "revision": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "topic": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "audience": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            },
+            "instructions": {
+              "type": "string",
+              "maxLength": 30000
+            },
+            "sourceIds": {
+              "maxItems": 1000,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+              }
+            },
+            "profiles": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                  },
+                  "revision": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "digest": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "id",
+                  "revision",
+                  "digest"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "overrides": {
+              "type": "object",
+              "properties": {
+                "recipe": {
+                  "type": "string",
+                  "enum": [
+                    "tutorial",
+                    "explainer",
+                    "asset-video",
+                    "reel",
+                    "mixed"
+                  ]
+                },
+                "language": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$"
+                },
+                "targetDurationUs": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "variants": {
+                  "minItems": 1,
+                  "maxItems": 12,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                      },
+                      "aspectRatio": {
+                        "type": "string",
+                        "enum": [
+                          "16:9",
+                          "9:16",
+                          "1:1",
+                          "custom"
+                        ]
+                      },
+                      "width": {
+                        "type": "integer",
+                        "minimum": 64,
+                        "maximum": 16384
+                      },
+                      "height": {
+                        "type": "integer",
+                        "minimum": 64,
+                        "maximum": 16384
+                      },
+                      "frameRate": {
+                        "type": "object",
+                        "properties": {
+                          "numerator": {
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 240000
+                          },
+                          "denominator": {
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 100000
+                          }
+                        },
+                        "required": [
+                          "numerator",
+                          "denominator"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "codec": {
+                        "type": "string",
+                        "enum": [
+                          "h264",
+                          "h265",
+                          "vp9",
+                          "av1"
+                        ]
+                      },
+                      "container": {
+                        "type": "string",
+                        "enum": [
+                          "mp4",
+                          "webm"
+                        ]
+                      },
+                      "thumbnail": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "aspectRatio",
+                      "width",
+                      "height",
+                      "frameRate",
+                      "codec",
+                      "container",
+                      "thumbnail"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "captions": {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "embedded",
+                        "sidecar",
+                        "both"
+                      ]
+                    },
+                    "formats": {
+                      "maxItems": 2,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "srt",
+                          "vtt"
+                        ]
+                      }
+                    },
+                    "language": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$"
+                    },
+                    "style": {
+                      "type": "object",
+                      "properties": {
+                        "fontFamily": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 100
+                        },
+                        "fontSize": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 512
+                        },
+                        "color": {
+                          "type": "string",
+                          "pattern": "^#[a-fA-F0-9]{6}([a-fA-F0-9]{2})?$"
+                        },
+                        "backgroundColor": {
+                          "type": "string",
+                          "pattern": "^#[a-fA-F0-9]{6}([a-fA-F0-9]{2})?$"
+                        },
+                        "maxLines": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 6
+                        },
+                        "position": {
+                          "type": "string",
+                          "enum": [
+                            "top",
+                            "center",
+                            "bottom"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "voice": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mode": {
+                          "type": "string",
+                          "const": "none"
+                        }
+                      },
+                      "required": [
+                        "mode"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mode": {
+                          "type": "string",
+                          "const": "supplied"
+                        },
+                        "assetId": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "assetId"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mode": {
+                          "type": "string",
+                          "const": "synthesize"
+                        },
+                        "voiceId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "pace": {
+                          "type": "number",
+                          "minimum": 0.25,
+                          "maximum": 4
+                        },
+                        "tone": {
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "pronunciations": {
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          },
+                          "additionalProperties": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 500
+                          }
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "voiceId",
+                        "pace",
+                        "tone",
+                        "pronunciations"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "audio": {
+                  "type": "object",
+                  "properties": {
+                    "music": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean",
+                              "const": false
+                            }
+                          },
+                          "required": [
+                            "enabled"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean",
+                              "const": true
+                            },
+                            "assetId": {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            },
+                            "gainDb": {
+                              "type": "number",
+                              "minimum": -80,
+                              "maximum": 0
+                            }
+                          },
+                          "required": [
+                            "enabled",
+                            "assetId",
+                            "gainDb"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "effects": {
+                      "type": "boolean"
+                    },
+                    "ducking": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "brand": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    "logoAssetId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fontFamily": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "primaryColor": {
+                      "type": "string",
+                      "pattern": "^#[a-fA-F0-9]{6}$"
+                    },
+                    "introTemplate": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "outroTemplate": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "providers": {
+                  "type": "object",
+                  "properties": {
+                    "renderer": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                        },
+                        "version": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 100
+                        },
+                        "config": {
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {
+                            "$ref": "#/$defs/__schema0"
+                          }
+                        },
+                        "credentialRef": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "version",
+                        "config",
+                        "credentialRef"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "voice": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            },
+                            "version": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "config": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {
+                                "$ref": "#/$defs/__schema0"
+                              }
+                            },
+                            "credentialRef": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "config",
+                            "credentialRef"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "capture": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            },
+                            "version": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "config": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {
+                                "$ref": "#/$defs/__schema0"
+                              }
+                            },
+                            "credentialRef": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "config",
+                            "credentialRef"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "alignment": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            },
+                            "version": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "config": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {
+                                "$ref": "#/$defs/__schema0"
+                              }
+                            },
+                            "credentialRef": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "config",
+                            "credentialRef"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "agent": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            },
+                            "version": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "config": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {
+                                "$ref": "#/$defs/__schema0"
+                              }
+                            },
+                            "credentialRef": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "config",
+                            "credentialRef"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "assets": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            },
+                            "version": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "config": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {
+                                "$ref": "#/$defs/__schema0"
+                              }
+                            },
+                            "credentialRef": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "config",
+                            "credentialRef"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "qualityProfileId": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                },
+                "policy": {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "review",
+                        "autonomous"
+                      ]
+                    },
+                    "localOnly": {
+                      "type": "boolean"
+                    },
+                    "budgetUsdMicros": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "researchBudgetUsdMicros": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "maxAttempts": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 20
+                    },
+                    "maxRepairs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 20
+                    },
+                    "deadlineAt": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "allowedOrigins": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    },
+                    "mutationTargets": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    },
+                    "requiredReviewModalities": {
+                      "minItems": 1,
+                      "maxItems": 4,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "text",
+                          "image",
+                          "audio",
+                          "video"
+                        ]
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemaVersion",
+            "id",
+            "createdAt",
+            "workspaceId",
+            "revision",
+            "title",
+            "topic",
+            "audience",
+            "instructions",
+            "sourceIds",
+            "profiles",
+            "overrides"
+          ],
+          "additionalProperties": false
+        },
+        "status": {
+          "type": "object",
+          "properties": {
+            "jobId": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+            },
+            "revision": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "lifecycle": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "running",
+                "waiting",
+                "paused",
+                "failed",
+                "cancelled",
+                "finished"
+              ]
+            },
+            "waitReason": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "input",
+                    "approval",
+                    "authentication",
+                    "budget",
+                    "capability",
+                    "uncertain-outcome"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "delivery": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "ready",
+                    "needs-attention",
+                    "failed",
+                    "cancelled"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "completedStages": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "totalStages": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "jobId",
+            "revision",
+            "lifecycle",
+            "waitReason",
+            "delivery",
+            "completedStages",
+            "totalStages"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "baseJobRevision",
+        "document",
+        "status"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "__schema0": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/__schema0"
+              }
+            },
+            {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "$ref": "#/$defs/__schema0"
+              }
+            }
+          ]
+        }
+      }
+    },
     "JobStatus": {
       "$id": "urn:tutorialx:schema:1:JobStatus",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -7668,6 +8636,3038 @@
         "limit"
       ],
       "additionalProperties": false
+    },
+    "PlanProjection": {
+      "$id": "urn:tutorialx:schema:1:PlanProjection",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "baseJobRevision": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "document": {
+          "type": "object",
+          "properties": {
+            "schemaVersion": {
+              "type": "number",
+              "const": 1
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+            },
+            "jobId": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+            },
+            "revision": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "basedOnJobRevision": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "researchReportId": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+            },
+            "evidenceDigest": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "effective": {
+              "type": "object",
+              "properties": {
+                "settings": {
+                  "type": "object",
+                  "properties": {
+                    "recipe": {
+                      "type": "string",
+                      "enum": [
+                        "tutorial",
+                        "explainer",
+                        "asset-video",
+                        "reel",
+                        "mixed"
+                      ]
+                    },
+                    "language": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$"
+                    },
+                    "targetDurationUs": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "variants": {
+                      "minItems": 1,
+                      "maxItems": 12,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                          },
+                          "aspectRatio": {
+                            "type": "string",
+                            "enum": [
+                              "16:9",
+                              "9:16",
+                              "1:1",
+                              "custom"
+                            ]
+                          },
+                          "width": {
+                            "type": "integer",
+                            "minimum": 64,
+                            "maximum": 16384
+                          },
+                          "height": {
+                            "type": "integer",
+                            "minimum": 64,
+                            "maximum": 16384
+                          },
+                          "frameRate": {
+                            "type": "object",
+                            "properties": {
+                              "numerator": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 240000
+                              },
+                              "denominator": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 100000
+                              }
+                            },
+                            "required": [
+                              "numerator",
+                              "denominator"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "codec": {
+                            "type": "string",
+                            "enum": [
+                              "h264",
+                              "h265",
+                              "vp9",
+                              "av1"
+                            ]
+                          },
+                          "container": {
+                            "type": "string",
+                            "enum": [
+                              "mp4",
+                              "webm"
+                            ]
+                          },
+                          "thumbnail": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "aspectRatio",
+                          "width",
+                          "height",
+                          "frameRate",
+                          "codec",
+                          "container",
+                          "thumbnail"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "captions": {
+                      "type": "object",
+                      "properties": {
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "none",
+                            "embedded",
+                            "sidecar",
+                            "both"
+                          ]
+                        },
+                        "formats": {
+                          "maxItems": 2,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "srt",
+                              "vtt"
+                            ]
+                          }
+                        },
+                        "language": {
+                          "type": "string",
+                          "pattern": "^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$"
+                        },
+                        "style": {
+                          "type": "object",
+                          "properties": {
+                            "fontFamily": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "fontSize": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 512
+                            },
+                            "color": {
+                              "type": "string",
+                              "pattern": "^#[a-fA-F0-9]{6}([a-fA-F0-9]{2})?$"
+                            },
+                            "backgroundColor": {
+                              "type": "string",
+                              "pattern": "^#[a-fA-F0-9]{6}([a-fA-F0-9]{2})?$"
+                            },
+                            "maxLines": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 6
+                            },
+                            "position": {
+                              "type": "string",
+                              "enum": [
+                                "top",
+                                "center",
+                                "bottom"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "fontFamily",
+                            "fontSize",
+                            "color",
+                            "backgroundColor",
+                            "maxLines",
+                            "position"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "formats",
+                        "language",
+                        "style"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "voice": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "mode": {
+                              "type": "string",
+                              "const": "none"
+                            }
+                          },
+                          "required": [
+                            "mode"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "mode": {
+                              "type": "string",
+                              "const": "supplied"
+                            },
+                            "assetId": {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            }
+                          },
+                          "required": [
+                            "mode",
+                            "assetId"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "mode": {
+                              "type": "string",
+                              "const": "synthesize"
+                            },
+                            "voiceId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 200
+                            },
+                            "pace": {
+                              "type": "number",
+                              "minimum": 0.25,
+                              "maximum": 4
+                            },
+                            "tone": {
+                              "type": "string",
+                              "maxLength": 500
+                            },
+                            "pronunciations": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              },
+                              "additionalProperties": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 500
+                              }
+                            }
+                          },
+                          "required": [
+                            "mode",
+                            "voiceId",
+                            "pace",
+                            "tone",
+                            "pronunciations"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "audio": {
+                      "type": "object",
+                      "properties": {
+                        "music": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "enabled": {
+                                  "type": "boolean",
+                                  "const": false
+                                }
+                              },
+                              "required": [
+                                "enabled"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "enabled": {
+                                  "type": "boolean",
+                                  "const": true
+                                },
+                                "assetId": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                "gainDb": {
+                                  "type": "number",
+                                  "minimum": -80,
+                                  "maximum": 0
+                                }
+                              },
+                              "required": [
+                                "enabled",
+                                "assetId",
+                                "gainDb"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "effects": {
+                          "type": "boolean"
+                        },
+                        "ducking": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "music",
+                        "effects",
+                        "ducking"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "brand": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "maxLength": 200
+                        },
+                        "logoAssetId": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "fontFamily": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 100
+                        },
+                        "primaryColor": {
+                          "type": "string",
+                          "pattern": "^#[a-fA-F0-9]{6}$"
+                        },
+                        "introTemplate": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "outroTemplate": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "logoAssetId",
+                        "fontFamily",
+                        "primaryColor",
+                        "introTemplate",
+                        "outroTemplate"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "providers": {
+                      "type": "object",
+                      "properties": {
+                        "renderer": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                            },
+                            "version": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "config": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {
+                                "$ref": "#/$defs/__schema0"
+                              }
+                            },
+                            "credentialRef": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "config",
+                            "credentialRef"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "voice": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                },
+                                "config": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string"
+                                  },
+                                  "additionalProperties": {
+                                    "$ref": "#/$defs/__schema0"
+                                  }
+                                },
+                                "credentialRef": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "version",
+                                "config",
+                                "credentialRef"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "capture": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                },
+                                "config": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string"
+                                  },
+                                  "additionalProperties": {
+                                    "$ref": "#/$defs/__schema0"
+                                  }
+                                },
+                                "credentialRef": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "version",
+                                "config",
+                                "credentialRef"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "alignment": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                },
+                                "config": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string"
+                                  },
+                                  "additionalProperties": {
+                                    "$ref": "#/$defs/__schema0"
+                                  }
+                                },
+                                "credentialRef": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "version",
+                                "config",
+                                "credentialRef"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "agent": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                },
+                                "config": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string"
+                                  },
+                                  "additionalProperties": {
+                                    "$ref": "#/$defs/__schema0"
+                                  }
+                                },
+                                "credentialRef": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "version",
+                                "config",
+                                "credentialRef"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "assets": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                },
+                                "config": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string"
+                                  },
+                                  "additionalProperties": {
+                                    "$ref": "#/$defs/__schema0"
+                                  }
+                                },
+                                "credentialRef": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "version",
+                                "config",
+                                "credentialRef"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "renderer",
+                        "voice",
+                        "capture",
+                        "alignment",
+                        "agent",
+                        "assets"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "qualityProfileId": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                    },
+                    "policy": {
+                      "type": "object",
+                      "properties": {
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "review",
+                            "autonomous"
+                          ]
+                        },
+                        "localOnly": {
+                          "type": "boolean"
+                        },
+                        "budgetUsdMicros": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "researchBudgetUsdMicros": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "maxAttempts": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 20
+                        },
+                        "maxRepairs": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 20
+                        },
+                        "deadlineAt": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "date-time",
+                              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "allowedOrigins": {
+                          "maxItems": 100,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "format": "uri"
+                          }
+                        },
+                        "mutationTargets": {
+                          "maxItems": 100,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "format": "uri"
+                          }
+                        },
+                        "requiredReviewModalities": {
+                          "minItems": 1,
+                          "maxItems": 4,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "text",
+                              "image",
+                              "audio",
+                              "video"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "localOnly",
+                        "budgetUsdMicros",
+                        "researchBudgetUsdMicros",
+                        "maxAttempts",
+                        "maxRepairs",
+                        "deadlineAt",
+                        "allowedOrigins",
+                        "mutationTargets",
+                        "requiredReviewModalities"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "recipe",
+                    "language",
+                    "targetDurationUs",
+                    "variants",
+                    "captions",
+                    "voice",
+                    "audio",
+                    "brand",
+                    "providers",
+                    "qualityProfileId",
+                    "policy"
+                  ],
+                  "additionalProperties": false
+                },
+                "origins": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "required": [
+                "settings",
+                "origins"
+              ],
+              "additionalProperties": false
+            },
+            "scenes": {
+              "minItems": 1,
+              "maxItems": 2000,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "narration": {
+                    "type": "string",
+                    "maxLength": 20000
+                  },
+                  "intent": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  },
+                  "evidenceIds": {
+                    "maxItems": 500,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                    }
+                  },
+                  "visual": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "text"
+                          },
+                          "headline": {
+                            "type": "string",
+                            "maxLength": 500
+                          },
+                          "body": {
+                            "type": "string",
+                            "maxLength": 5000
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "headline",
+                          "body"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "image"
+                          },
+                          "assetId": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                          },
+                          "fit": {
+                            "type": "string",
+                            "enum": [
+                              "contain",
+                              "cover"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "assetId",
+                          "fit"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "video"
+                          },
+                          "assetId": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                          },
+                          "startUs": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "durationUs": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "fit": {
+                            "type": "string",
+                            "enum": [
+                              "contain",
+                              "cover"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "assetId",
+                          "startUs",
+                          "durationUs",
+                          "fit"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "browser"
+                          },
+                          "target": {
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "setupRecipeId": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "steps": {
+                            "minItems": 1,
+                            "maxItems": 200,
+                            "type": "array",
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                    },
+                                    "description": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1000
+                                    },
+                                    "evidenceIds": {
+                                      "minItems": 1,
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                      }
+                                    },
+                                    "expected": {
+                                      "minItems": 1,
+                                      "maxItems": 20,
+                                      "type": "array",
+                                      "items": {
+                                        "oneOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "visible"
+                                              },
+                                              "locator": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "role"
+                                                      },
+                                                      "role": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 100
+                                                      },
+                                                      "name": {
+                                                        "type": "string",
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "role",
+                                                      "name"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "label"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "test-id"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "css"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 1000
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "locator"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "text"
+                                              },
+                                              "locator": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "role"
+                                                      },
+                                                      "role": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 100
+                                                      },
+                                                      "name": {
+                                                        "type": "string",
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "role",
+                                                      "name"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "label"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "test-id"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "css"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 1000
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              },
+                                              "text": {
+                                                "type": "string",
+                                                "maxLength": 4000
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "locator",
+                                              "text"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "url"
+                                              },
+                                              "url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "url"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "dwellUs": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 60000000
+                                    },
+                                    "action": {
+                                      "type": "string",
+                                      "const": "navigate"
+                                    },
+                                    "url": {
+                                      "type": "string",
+                                      "format": "uri"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "description",
+                                    "evidenceIds",
+                                    "expected",
+                                    "dwellUs",
+                                    "action",
+                                    "url"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                    },
+                                    "description": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1000
+                                    },
+                                    "evidenceIds": {
+                                      "minItems": 1,
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                      }
+                                    },
+                                    "expected": {
+                                      "minItems": 1,
+                                      "maxItems": 20,
+                                      "type": "array",
+                                      "items": {
+                                        "oneOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "visible"
+                                              },
+                                              "locator": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "role"
+                                                      },
+                                                      "role": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 100
+                                                      },
+                                                      "name": {
+                                                        "type": "string",
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "role",
+                                                      "name"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "label"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "test-id"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "css"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 1000
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "locator"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "text"
+                                              },
+                                              "locator": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "role"
+                                                      },
+                                                      "role": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 100
+                                                      },
+                                                      "name": {
+                                                        "type": "string",
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "role",
+                                                      "name"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "label"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "test-id"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "css"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 1000
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              },
+                                              "text": {
+                                                "type": "string",
+                                                "maxLength": 4000
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "locator",
+                                              "text"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "url"
+                                              },
+                                              "url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "url"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "dwellUs": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 60000000
+                                    },
+                                    "action": {
+                                      "type": "string",
+                                      "const": "click"
+                                    },
+                                    "locator": {
+                                      "oneOf": [
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "role"
+                                            },
+                                            "role": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 100
+                                            },
+                                            "name": {
+                                              "type": "string",
+                                              "maxLength": 500
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "role",
+                                            "name"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "label"
+                                            },
+                                            "value": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 500
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "value"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "test-id"
+                                            },
+                                            "value": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 500
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "value"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "css"
+                                            },
+                                            "value": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 1000
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "value"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "description",
+                                    "evidenceIds",
+                                    "expected",
+                                    "dwellUs",
+                                    "action",
+                                    "locator"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                    },
+                                    "description": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1000
+                                    },
+                                    "evidenceIds": {
+                                      "minItems": 1,
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                      }
+                                    },
+                                    "expected": {
+                                      "minItems": 1,
+                                      "maxItems": 20,
+                                      "type": "array",
+                                      "items": {
+                                        "oneOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "visible"
+                                              },
+                                              "locator": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "role"
+                                                      },
+                                                      "role": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 100
+                                                      },
+                                                      "name": {
+                                                        "type": "string",
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "role",
+                                                      "name"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "label"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "test-id"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "css"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 1000
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "locator"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "text"
+                                              },
+                                              "locator": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "role"
+                                                      },
+                                                      "role": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 100
+                                                      },
+                                                      "name": {
+                                                        "type": "string",
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "role",
+                                                      "name"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "label"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "test-id"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "css"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 1000
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              },
+                                              "text": {
+                                                "type": "string",
+                                                "maxLength": 4000
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "locator",
+                                              "text"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "url"
+                                              },
+                                              "url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "url"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "dwellUs": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 60000000
+                                    },
+                                    "action": {
+                                      "type": "string",
+                                      "const": "fill"
+                                    },
+                                    "locator": {
+                                      "oneOf": [
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "role"
+                                            },
+                                            "role": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 100
+                                            },
+                                            "name": {
+                                              "type": "string",
+                                              "maxLength": 500
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "role",
+                                            "name"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "label"
+                                            },
+                                            "value": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 500
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "value"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "test-id"
+                                            },
+                                            "value": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 500
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "value"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "css"
+                                            },
+                                            "value": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 1000
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "value"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "string",
+                                      "maxLength": 20000
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "description",
+                                    "evidenceIds",
+                                    "expected",
+                                    "dwellUs",
+                                    "action",
+                                    "locator",
+                                    "value"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                    },
+                                    "description": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1000
+                                    },
+                                    "evidenceIds": {
+                                      "minItems": 1,
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                      }
+                                    },
+                                    "expected": {
+                                      "minItems": 1,
+                                      "maxItems": 20,
+                                      "type": "array",
+                                      "items": {
+                                        "oneOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "visible"
+                                              },
+                                              "locator": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "role"
+                                                      },
+                                                      "role": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 100
+                                                      },
+                                                      "name": {
+                                                        "type": "string",
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "role",
+                                                      "name"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "label"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "test-id"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "css"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 1000
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "locator"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "text"
+                                              },
+                                              "locator": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "role"
+                                                      },
+                                                      "role": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 100
+                                                      },
+                                                      "name": {
+                                                        "type": "string",
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "role",
+                                                      "name"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "label"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "test-id"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "css"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 1000
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              },
+                                              "text": {
+                                                "type": "string",
+                                                "maxLength": 4000
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "locator",
+                                              "text"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "url"
+                                              },
+                                              "url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "url"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "dwellUs": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 60000000
+                                    },
+                                    "action": {
+                                      "type": "string",
+                                      "const": "scroll"
+                                    },
+                                    "locator": {
+                                      "oneOf": [
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "role"
+                                            },
+                                            "role": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 100
+                                            },
+                                            "name": {
+                                              "type": "string",
+                                              "maxLength": 500
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "role",
+                                            "name"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "label"
+                                            },
+                                            "value": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 500
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "value"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "test-id"
+                                            },
+                                            "value": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 500
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "value"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "by": {
+                                              "type": "string",
+                                              "const": "css"
+                                            },
+                                            "value": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 1000
+                                            }
+                                          },
+                                          "required": [
+                                            "by",
+                                            "value"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "description",
+                                    "evidenceIds",
+                                    "expected",
+                                    "dwellUs",
+                                    "action",
+                                    "locator"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                    },
+                                    "description": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1000
+                                    },
+                                    "evidenceIds": {
+                                      "minItems": 1,
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                      }
+                                    },
+                                    "expected": {
+                                      "minItems": 1,
+                                      "maxItems": 20,
+                                      "type": "array",
+                                      "items": {
+                                        "oneOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "visible"
+                                              },
+                                              "locator": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "role"
+                                                      },
+                                                      "role": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 100
+                                                      },
+                                                      "name": {
+                                                        "type": "string",
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "role",
+                                                      "name"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "label"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "test-id"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "css"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 1000
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "locator"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "text"
+                                              },
+                                              "locator": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "role"
+                                                      },
+                                                      "role": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 100
+                                                      },
+                                                      "name": {
+                                                        "type": "string",
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "role",
+                                                      "name"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "label"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "test-id"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 500
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "by": {
+                                                        "type": "string",
+                                                        "const": "css"
+                                                      },
+                                                      "value": {
+                                                        "type": "string",
+                                                        "minLength": 1,
+                                                        "maxLength": 1000
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "by",
+                                                      "value"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              },
+                                              "text": {
+                                                "type": "string",
+                                                "maxLength": 4000
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "locator",
+                                              "text"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "kind": {
+                                                "type": "string",
+                                                "const": "url"
+                                              },
+                                              "url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                              }
+                                            },
+                                            "required": [
+                                              "kind",
+                                              "url"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "dwellUs": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 60000000
+                                    },
+                                    "action": {
+                                      "type": "string",
+                                      "const": "observe"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "description",
+                                    "evidenceIds",
+                                    "expected",
+                                    "dwellUs",
+                                    "action"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            }
+                          },
+                          "focus": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                  },
+                                  "width": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0,
+                                    "maximum": 1
+                                  },
+                                  "height": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0,
+                                    "maximum": 1
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y",
+                                  "width",
+                                  "height"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "maskRegions": {
+                            "maxItems": 100,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "width": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 1
+                                },
+                                "height": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 1
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y",
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "target",
+                          "setupRecipeId",
+                          "steps",
+                          "focus",
+                          "maskRegions"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "diagram"
+                          },
+                          "nodes": {
+                            "minItems": 1,
+                            "maxItems": 100,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "maxLength": 500
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "label"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "edges": {
+                            "maxItems": 500,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "from": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                "to": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "maxLength": 200
+                                }
+                              },
+                              "required": [
+                                "from",
+                                "to",
+                                "label"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "nodes",
+                          "edges"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "custom"
+                          },
+                          "providerId": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                          },
+                          "templateId": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                          },
+                          "data": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {
+                              "$ref": "#/$defs/__schema0"
+                            }
+                          },
+                          "requiredCapabilities": {
+                            "maxItems": 100,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            }
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "providerId",
+                          "templateId",
+                          "data",
+                          "requiredCapabilities"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "estimatedDurationUs": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "transition": {
+                    "type": "string",
+                    "enum": [
+                      "cut",
+                      "fade",
+                      "slide"
+                    ]
+                  },
+                  "variantFraming": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                    },
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "focus": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "width": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 1
+                                },
+                                "height": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 1
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y",
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "notes": {
+                          "type": "string",
+                          "maxLength": 2000
+                        }
+                      },
+                      "required": [
+                        "focus",
+                        "notes"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "narration",
+                  "intent",
+                  "evidenceIds",
+                  "visual",
+                  "estimatedDurationUs",
+                  "transition",
+                  "variantFraming"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "costEstimate": {
+              "type": "object",
+              "properties": {
+                "expectedUsdMicros": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "upperBoundUsdMicros": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uncertainty": {
+                  "maxItems": 100,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000
+                  }
+                }
+              },
+              "required": [
+                "expectedUsdMicros",
+                "upperBoundUsdMicros",
+                "uncertainty"
+              ],
+              "additionalProperties": false
+            },
+            "limitations": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              }
+            }
+          },
+          "required": [
+            "schemaVersion",
+            "id",
+            "createdAt",
+            "jobId",
+            "revision",
+            "basedOnJobRevision",
+            "researchReportId",
+            "evidenceDigest",
+            "effective",
+            "scenes",
+            "costEstimate",
+            "limitations"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "baseJobRevision",
+        "document"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "__schema0": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/__schema0"
+              }
+            },
+            {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "$ref": "#/$defs/__schema0"
+              }
+            }
+          ]
+        }
+      }
     },
     "PlanRevision": {
       "$id": "urn:tutorialx:schema:1:PlanRevision",

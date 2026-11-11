@@ -22,6 +22,7 @@ import {
   planRevisionSchema,
   scenePlanSchema,
 } from './planning.js';
+import { jobProjectionSchema, planProjectionSchema } from './projections.js';
 import { costEstimateSchema, providerDescriptorSchema } from './providers/descriptor.js';
 import {
   agentTaskResultSchema,
@@ -67,10 +68,12 @@ export const PUBLIC_SCHEMAS = {
   ExecutionEvent: executionEventSchema,
   JobBrief: jobBriefSchema,
   JobCreation: jobCreationSchema,
+  JobProjection: jobProjectionSchema,
   JobStatus: jobStatusSchema,
   OperationRecord: operationRecordSchema,
   Pagination: paginationSchema,
   PlanRevision: planRevisionSchema,
+  PlanProjection: planProjectionSchema,
   Profile: profileSchema,
   ProviderDescriptor: providerDescriptorSchema,
   ProviderCandidate: providerCandidateSchema,
