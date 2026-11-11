@@ -28,6 +28,7 @@ Useful commands:
 | `pnpm boundaries` | Reject dependency cycles and forbidden package imports |
 | `pnpm test` | Run tests, including negative architecture fixtures |
 | `pnpm check` | Run the required local quality checks |
+| `pnpm package:audit` | Inspect package dry-runs for unintended files |
 
 See the [architecture](docs/architecture.md), [contributor guide](docs/contributing.md), and [design](openspec/changes/build-portable-video-production-system/design.md).
 

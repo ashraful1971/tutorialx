@@ -15,7 +15,8 @@
     "lint": "biome ci .",
     "boundaries": "depcruise packages/*/src --config .dependency-cruiser.cjs --output-type err-long",
     "test": "vitest run",
-    "check": "pnpm build && pnpm typecheck && pnpm lint && pnpm boundaries && pnpm test"
+    "package:audit": "node scripts/package-audit.mjs",
+    "check": "pnpm build && pnpm typecheck && pnpm lint && pnpm boundaries && pnpm test && pnpm package:audit"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
