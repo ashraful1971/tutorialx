@@ -16,7 +16,9 @@
     "boundaries": "depcruise packages/*/src --config .dependency-cruiser.cjs --output-type err-long",
     "test": "vitest run",
     "package:audit": "node scripts/package-audit.mjs",
-    "check": "pnpm build && pnpm typecheck && pnpm lint && pnpm boundaries && pnpm test && pnpm package:audit"
+    "schema:check": "node scripts/schema-catalog.mjs",
+    "schema:update": "pnpm build && node scripts/schema-catalog.mjs --write",
+    "check": "pnpm build && pnpm typecheck && pnpm lint && pnpm boundaries && pnpm test && pnpm schema:check && pnpm package:audit"
   },
   "devDependencies": {
     "@tutorialx/contracts": "workspace:^",

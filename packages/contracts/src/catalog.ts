@@ -1,0 +1,94 @@
+import { z } from 'zod';
+import {
+  actionDescriptorSchema,
+  actionRequestSchema,
+  actionResponseSchema,
+  paginationSchema,
+} from './actions.js';
+import { approvalRecordSchema } from './approval.js';
+import { artifactManifestSchema } from './artifacts.js';
+import { batchManifestSchema } from './batch.js';
+import { CONTRACT_VERSION } from './common.js';
+import { deliveryManifestSchema } from './delivery.js';
+import {
+  executionEventSchema,
+  jobStatusSchema,
+  operationRecordSchema,
+  stageAttemptSchema,
+} from './execution.js';
+import { jobBriefSchema, planRevisionSchema, scenePlanSchema } from './planning.js';
+import { costEstimateSchema, providerDescriptorSchema } from './providers/descriptor.js';
+import {
+  agentTaskResultSchema,
+  alignmentResultSchema,
+  assetResultSchema,
+  captureResultSchema,
+  readerResultSchema,
+  renderResultSchema,
+  voiceResultSchema,
+} from './providers/responses.js';
+import { qualityFindingSchema, qualityProfileSchema, reviewResultSchema } from './quality.js';
+import { effectiveSettingsSchema, settingsOverridesSchema, settingsSchema } from './settings.js';
+import { evidenceRecordSchema, researchReportSchema, sourceManifestSchema } from './sources.js';
+import { captionTrackSchema, timelineSchema } from './timeline.js';
+import { profileSchema, workspaceConfigSchema } from './workspace.js';
+
+export const PUBLIC_SCHEMAS = {
+  ActionDescriptor: actionDescriptorSchema,
+  ActionRequest: actionRequestSchema,
+  ActionResponse: actionResponseSchema,
+  AgentTaskResult: agentTaskResultSchema,
+  AlignmentResult: alignmentResultSchema,
+  ApprovalRecord: approvalRecordSchema,
+  ArtifactManifest: artifactManifestSchema,
+  AssetResult: assetResultSchema,
+  BatchManifest: batchManifestSchema,
+  CaptionTrack: captionTrackSchema,
+  CaptureResult: captureResultSchema,
+  CostEstimate: costEstimateSchema,
+  DeliveryManifest: deliveryManifestSchema,
+  EffectiveSettings: effectiveSettingsSchema,
+  EvidenceRecord: evidenceRecordSchema,
+  ExecutionEvent: executionEventSchema,
+  JobBrief: jobBriefSchema,
+  JobStatus: jobStatusSchema,
+  OperationRecord: operationRecordSchema,
+  Pagination: paginationSchema,
+  PlanRevision: planRevisionSchema,
+  Profile: profileSchema,
+  ProviderDescriptor: providerDescriptorSchema,
+  QualityFinding: qualityFindingSchema,
+  QualityProfile: qualityProfileSchema,
+  ReaderResult: readerResultSchema,
+  RenderResult: renderResultSchema,
+  ResearchReport: researchReportSchema,
+  ReviewResult: reviewResultSchema,
+  ScenePlan: scenePlanSchema,
+  Settings: settingsSchema,
+  SettingsOverrides: settingsOverridesSchema,
+  SourceManifest: sourceManifestSchema,
+  StageAttempt: stageAttemptSchema,
+  Timeline: timelineSchema,
+  VoiceResult: voiceResultSchema,
+  WorkspaceConfig: workspaceConfigSchema,
+} as const;
+
+export type PublicSchemaName = keyof typeof PUBLIC_SCHEMAS;
+
+export function publicSchema(name: PublicSchemaName) {
+  return {
+    $id: `urn:tutorialx:schema:${CONTRACT_VERSION}:${name}`,
+    ...z.toJSONSchema(PUBLIC_SCHEMAS[name], { target: 'draft-2020-12', io: 'input' }),
+  };
+}
+
+export function schemaCatalog() {
+  return {
+    contractVersion: CONTRACT_VERSION,
+    schemas: Object.fromEntries(
+      (Object.keys(PUBLIC_SCHEMAS) as PublicSchemaName[])
+        .sort()
+        .map((name) => [name, publicSchema(name)]),
+    ),
+  };
+}
