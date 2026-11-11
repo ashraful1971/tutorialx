@@ -7,7 +7,7 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 ## 1. M1: Package boundaries and contributor foundation
 
 - [x] 1.1 Establish the pnpm workspace with contracts, core, adapters, and CLI packages, strict TypeScript, explicit exports, and a supported Node LTS matrix; verify clean install and package builds without cloud credentials or Python.
-- [ ] 1.2 Add formatting, linting, type checks, dependency/cycle checks, and Vitest with minimal useful fixtures; verify CI rejects an intentional forbidden vendor import into core and a cross-package deep import.
+- [x] 1.2 Add formatting, linting, type checks, dependency/cycle checks, and Vitest with minimal useful fixtures; verify CI rejects an intentional forbidden vendor import into core and a cross-package deep import.
 - [ ] 1.3 Document the feature/module ownership map, dependency direction, local developer commands, and architectural decision process; verify every initial module has a stated responsibility and the documented development commands run from a fresh checkout.
 - [ ] 1.4 Establish package allowlists, lockfile policy, and separate public samples from private workspaces; verify a package dry-run lists no workspace state, browser session, credential file, or generated personal media.
 
