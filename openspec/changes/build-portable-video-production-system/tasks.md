@@ -17,7 +17,7 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 - [x] 2.2 Define artifact, timeline, caption, attempt/operation, quality, delivery, and event schemas with stable IDs and consistent media time/frame-rate types; verify round trips and frame-rounding boundary fixtures.
 - [x] 2.3 Define responsibility-specific provider ports and descriptors for runners, readers, capture, speech, alignment, assets, rendering, storage, persistence, queueing, and isolation; verify fake compatible and incompatible providers through a reusable conformance harness.
 - [x] 2.4 Define action envelopes, error/exit-code mappings, expected revisions, idempotency keys, cursor pagination, and asynchronous operation responses; verify JSON Schema generation and public-schema compatibility checks.
-- [ ] 2.5 Add capability/configuration negotiation, explicit provider wiring, and selection/fallback policies; verify unsupported language/custom scenes fail before dispatch and a voice-changing fallback cannot bypass authorization.
+- [x] 2.5 Add capability/configuration negotiation, explicit provider wiring, and selection/fallback policies; verify unsupported language/custom scenes fail before dispatch and a voice-changing fallback cannot bypass authorization.
 - [ ] 2.6 Document contract evolution and a complete small voice-provider example; verify the example registers and passes its conformance suite without importing core internals or modifying stage logic.
 
 ## 3. M1: Workspace organization and source registration

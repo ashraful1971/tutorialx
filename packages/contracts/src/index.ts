@@ -14,6 +14,7 @@ export * from './providers/descriptor.js';
 export * from './providers/infrastructure.js';
 export * from './providers/media.js';
 export * from './providers/responses.js';
+export * from './providers/selection.js';
 export * from './quality.js';
 export * from './settings.js';
 export * from './sources.js';

@@ -27,6 +27,11 @@ import {
   renderResultSchema,
   voiceResultSchema,
 } from './providers/responses.js';
+import {
+  providerCandidateSchema,
+  providerFallbackPolicySchema,
+  providerRequirementsSchema,
+} from './providers/selection.js';
 import { qualityFindingSchema, qualityProfileSchema, reviewResultSchema } from './quality.js';
 import { effectiveSettingsSchema, settingsOverridesSchema, settingsSchema } from './settings.js';
 import { evidenceRecordSchema, researchReportSchema, sourceManifestSchema } from './sources.js';
@@ -57,6 +62,9 @@ export const PUBLIC_SCHEMAS = {
   PlanRevision: planRevisionSchema,
   Profile: profileSchema,
   ProviderDescriptor: providerDescriptorSchema,
+  ProviderCandidate: providerCandidateSchema,
+  ProviderFallbackPolicy: providerFallbackPolicySchema,
+  ProviderRequirements: providerRequirementsSchema,
   QualityFinding: qualityFindingSchema,
   QualityProfile: qualityProfileSchema,
   ReaderResult: readerResultSchema,
