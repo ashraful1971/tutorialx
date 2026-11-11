@@ -1,0 +1,23 @@
+# Local operating-system files
+.DS_Store
+Thumbs.db
+
+# Dependencies and generated development output
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+*.log
+.venv/
+__pycache__/
+.pytest_cache/
+
+# Credentials: commit templates, never real environment files
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Private TutorialX runtime state and video content
+/.tutorialx/
+/tutorialx-videos/
