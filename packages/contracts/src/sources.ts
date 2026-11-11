@@ -34,6 +34,10 @@ export const sourceManifestSchema = z.strictObject({
   }),
 });
 
+export const sourceRegistrationSchema = sourceManifestSchema
+  .pick({ input: true, attribution: true, sourceRevision: true })
+  .partial({ sourceRevision: true });
+
 export const evidenceLocatorSchema = z
   .discriminatedUnion('kind', [
     z.strictObject({ kind: z.literal('whole') }),
@@ -81,5 +85,6 @@ export const researchReportSchema = z.strictObject({
 
 export type InputReference = z.infer<typeof inputReferenceSchema>;
 export type SourceManifest = z.infer<typeof sourceManifestSchema>;
+export type SourceRegistration = z.infer<typeof sourceRegistrationSchema>;
 export type EvidenceRecord = z.infer<typeof evidenceRecordSchema>;
 export type ResearchReport = z.infer<typeof researchReportSchema>;

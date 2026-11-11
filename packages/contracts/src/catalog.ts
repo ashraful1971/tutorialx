@@ -39,7 +39,12 @@ import {
 } from './providers/selection.js';
 import { qualityFindingSchema, qualityProfileSchema, reviewResultSchema } from './quality.js';
 import { effectiveSettingsSchema, settingsOverridesSchema, settingsSchema } from './settings.js';
-import { evidenceRecordSchema, researchReportSchema, sourceManifestSchema } from './sources.js';
+import {
+  evidenceRecordSchema,
+  researchReportSchema,
+  sourceManifestSchema,
+  sourceRegistrationSchema,
+} from './sources.js';
 import { captionTrackSchema, timelineSchema } from './timeline.js';
 import { profileSchema, workspaceConfigSchema } from './workspace.js';
 
@@ -81,6 +86,7 @@ export const PUBLIC_SCHEMAS = {
   Settings: settingsSchema,
   SettingsOverrides: settingsOverridesSchema,
   SourceManifest: sourceManifestSchema,
+  SourceRegistration: sourceRegistrationSchema,
   StageAttempt: stageAttemptSchema,
   Timeline: timelineSchema,
   VoiceResult: voiceResultSchema,

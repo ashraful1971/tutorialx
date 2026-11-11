@@ -17869,6 +17869,144 @@
       ],
       "additionalProperties": false
     },
+    "SourceRegistration": {
+      "$id": "urn:tutorialx:schema:1:SourceRegistration",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "input": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "text"
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100000
+                }
+              },
+              "required": [
+                "kind",
+                "text"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "url"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "kind",
+                "url"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "file",
+                    "directory",
+                    "codebase",
+                    "media"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "copy": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "kind",
+                "path",
+                "copy"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "attribution": {
+          "type": "object",
+          "properties": {
+            "origin": {
+              "type": "string",
+              "maxLength": 4096
+            },
+            "license": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 500
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "requiredText": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "usage": {
+              "type": "string",
+              "enum": [
+                "permitted",
+                "unknown",
+                "restricted"
+              ]
+            }
+          },
+          "required": [
+            "origin",
+            "license",
+            "requiredText",
+            "usage"
+          ],
+          "additionalProperties": false
+        },
+        "sourceRevision": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 500
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "input",
+        "attribution"
+      ],
+      "additionalProperties": false
+    },
     "StageAttempt": {
       "$id": "urn:tutorialx:schema:1:StageAttempt",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
