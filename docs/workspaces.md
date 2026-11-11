@@ -39,3 +39,13 @@ New private-state and content directories receive a `.gitignore` containing `*`.
 Replace the second pattern with the configured internal content path. External content needs its own ignore policy if it belongs to another repository. Never force-add secrets, sessions, live SQLite/WAL files, recordings, or personal deliveries. Public examples and generated test fixtures belong in their explicitly reviewed source locations.
 
 Executable coverage in `tests/workspace/initialization.test.ts` creates temporary existing-app and external-content workspaces, exercises repeat/concurrent setup and duplicate titles, and verifies original application files and rejected symlink targets remain untouched.
+
+## Resolve profiles and settings
+
+`resolveSettings(input, fingerprint)` from `@tutorialx/core` resolves a new detached snapshot. Supply the complete built-in defaults, versioned workspace config, optional product/brand profiles, ordered preset profiles, and job overrides. The fingerprint callback hashes the validated profile record; its result must be a SHA-256-shaped digest. The return value contains effective settings, per-field origins, the workspace ID/revision, and full profile revision snapshots/digests.
+
+Precedence, lowest to highest: built-in defaults, workspace defaults, product, brand, presets in their supplied order, job overrides. Nested styling and brand fields merge. Arrays, discriminated voice/music choices, and individual provider selections replace their previous value. Unknown keys and contradictory final settings fail validation. Origins use paths such as `captions.style.fontSize` and values such as `preset:vertical@2` or `job`.
+
+Workspace policy ceilings first constrain built-in policy defaults. Every explicit layer is then checked against the ceiling: budgets, attempts/repairs, deadlines, local-only processing, review mode, permitted origins/mutation targets, and required review modalities. Explicit attempts to weaken operator policy are rejected, including a bad profile hidden by a later stricter job override. Origin/target matching uses normalized complete URLs and does not infer authority for a subdomain or a different path. Review requirements can be added but cannot be removed below the ceiling.
+
+The resolver never refreshes an existing job or mutates its inputs. Store the returned settings/profile snapshots with the plan revision. A later profile edit can be adopted only through a new explicit resolution/revision and the subsequent approval checks. The resolver supplies no execution authorization and does not replace revision-bound plan approval. `tests/workspace/settings.test.ts` exercises precedence, origins, snapshots, invalid overlays, and rejected policy changes.
