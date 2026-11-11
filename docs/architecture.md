@@ -36,4 +36,6 @@ The dependency analyzer checks imports, re-exports, cycles, and public-package r
 
 Domain code receives ports explicitly. Composition roots select adapters. Provider responses and public inputs are validated at boundaries; pure calculations do not repeatedly parse the same record. Actual provider SDKs and optional media runtimes are introduced only with their adapters.
 
+Workspace setup follows the same boundary: core creates validated configurations/briefs using injected identities and a clock, while the `WorkspaceLayout` port prepares local configuration and directory files. It does not replace the job repository's future authority over execution state. See [local workspaces](workspaces.md).
+
 See [ADR 0001](decisions/0001-engine-boundaries.md) for the rationale. Record a new decision when a public contract, execution authority, persistence ownership, or package dependency changes.

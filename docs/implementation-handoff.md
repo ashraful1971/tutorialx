@@ -4,11 +4,11 @@ Checkpoint: 2026-11-11. Active OpenSpec change: `build-portable-video-production
 
 ## Current state
 
-10 of 98 tasks are complete: 1.1–1.4 and 2.1–2.6. The repository has a strict TypeScript workspace, package boundaries, contributor documentation, package audits, validated planning/media/execution contracts, provider interfaces, a versioned agent action protocol, explicit provider wiring with capability/configuration negotiation and revision-bound fallback checks, and a tested small voice-provider extension example.
+11 of 98 tasks are complete: 1.1–1.4, 2.1–2.6, and 3.1. The repository has validated contracts, public actions/provider ports, explicit provider negotiation, a tested voice extension example, and idempotent local workspace initialization with internal/external content roots and unique job directories.
 
 This is the foundation. Rendering, narration, browser recording, persistent orchestration, and an end-to-end video CLI are not implemented yet. The change remains active; sync final specifications and archive after its implementation is complete.
 
-Validation at this checkpoint: `pnpm check` passed (build, type checking, lint, dependency boundaries, 100 tests, schema drift checks, and package audits). The three added provider-selection schemas preserve all prior v1 schemas unchanged. Provider checks use fixtures, not live services. The recorded-voice example exercises real WAV file handling using generated silent PCM and makes no claim of speech-quality or alignment verification.
+Validation at this checkpoint: `pnpm check` passed (build, type checking, lint, dependency boundaries, 108 tests, schema drift checks, and package audits). New schemas are additive. Workspace tests use temporary real files, including concurrent setup, duplicate titles, and rejected symlink targets. Provider checks use fixtures, not live services or speech-quality verification.
 
 ## Continue on another device
 
@@ -27,7 +27,7 @@ With the OpenSpec CLI available, ask your agent:
 
 ```text
 Use openspec-apply-change for build-portable-video-production-system.
-Read docs/implementation-handoff.md and resume at task 3.1.
+Read docs/implementation-handoff.md and resume at task 3.2.
 Apply, verify, and commit/push completed tasks as instructed by AGENTS.md.
 Sync the specs and archive the change when all implementation tasks are complete.
 ```
@@ -36,7 +36,7 @@ The skill lives at `.agents/skills/openspec-apply-change/SKILL.md`. All planning
 
 ## Next task
 
-Task 3.1 implements idempotent workspace initialization, configurable internal/external content roots, unique automatic job folders, and private-state ignore guidance. Verify repeated initialization preserves existing application files and duplicate titles never overwrite jobs. Read the existing design and workspace-management spec before editing; subsequent tasks implement settings resolution, source registration, persistence, orchestration, interfaces, and end-to-end delivery.
+Task 3.2 implements profile/preset resolution, visible precedence, workspace policy ceilings, setting origins, and detached revision snapshots. Verify job overrides and ensure profiles cannot relax operator limits or mutate approved settings. Then continue with source registration and projection/import behavior. See `docs/workspaces.md` for the current workspace API and boundaries.
 
 Provider extension guidance is in `docs/providers.md`, `docs/contract-evolution.md`, and `examples/providers/README.md`. The example imports only the public contracts and Node built-ins; its public registration/conformance exercise lives in `tests/conformance/recorded-voice.test.ts`.
 

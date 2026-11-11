@@ -21,6 +21,7 @@
     "check": "pnpm build && pnpm typecheck && pnpm lint && pnpm boundaries && pnpm test && pnpm schema:check && pnpm package:audit"
   },
   "devDependencies": {
+    "@tutorialx/adapters": "workspace:^",
     "@tutorialx/core": "workspace:^",
     "@tutorialx/contracts": "workspace:^",
     "@biomejs/biome": "2.6.6",

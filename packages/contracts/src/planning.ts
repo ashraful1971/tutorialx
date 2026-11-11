@@ -25,6 +25,16 @@ export const jobBriefSchema = z.strictObject({
   overrides: settingsOverridesSchema,
 });
 
+export const jobCreationSchema = jobBriefSchema
+  .omit({
+    schemaVersion: true,
+    id: true,
+    createdAt: true,
+    workspaceId: true,
+    revision: true,
+  })
+  .partial({ instructions: true, sourceIds: true, profiles: true, overrides: true });
+
 export const focusRegionSchema = z
   .strictObject({
     x: z.number().min(0).max(1),
@@ -165,6 +175,7 @@ export const planRevisionSchema = z.strictObject({
 });
 
 export type JobBrief = z.infer<typeof jobBriefSchema>;
+export type JobCreation = z.infer<typeof jobCreationSchema>;
 export type ScenePlan = z.infer<typeof scenePlanSchema>;
 export type PlanRevision = z.infer<typeof planRevisionSchema>;
 export type CaptureStep = z.infer<typeof captureStepSchema>;

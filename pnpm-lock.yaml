@@ -11,6 +11,9 @@ importers:
       '@biomejs/biome':
         specifier: 2.6.6
         version: 2.6.6
+      '@tutorialx/adapters':
+        specifier: workspace:^
+        version: link:packages/adapters
       '@tutorialx/contracts':
         specifier: workspace:^
         version: link:packages/contracts

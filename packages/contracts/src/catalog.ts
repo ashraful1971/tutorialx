@@ -16,7 +16,12 @@ import {
   operationRecordSchema,
   stageAttemptSchema,
 } from './execution.js';
-import { jobBriefSchema, planRevisionSchema, scenePlanSchema } from './planning.js';
+import {
+  jobBriefSchema,
+  jobCreationSchema,
+  planRevisionSchema,
+  scenePlanSchema,
+} from './planning.js';
 import { costEstimateSchema, providerDescriptorSchema } from './providers/descriptor.js';
 import {
   agentTaskResultSchema,
@@ -56,6 +61,7 @@ export const PUBLIC_SCHEMAS = {
   EvidenceRecord: evidenceRecordSchema,
   ExecutionEvent: executionEventSchema,
   JobBrief: jobBriefSchema,
+  JobCreation: jobCreationSchema,
   JobStatus: jobStatusSchema,
   OperationRecord: operationRecordSchema,
   Pagination: paginationSchema,

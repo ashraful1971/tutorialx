@@ -20,3 +20,4 @@ export * from './settings.js';
 export * from './sources.js';
 export * from './timeline.js';
 export * from './workspace.js';
+export * from './workspace-layout.js';

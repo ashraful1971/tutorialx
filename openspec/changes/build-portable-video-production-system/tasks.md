@@ -22,7 +22,7 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 
 ## 3. M1: Workspace organization and source registration
 
-- [ ] 3.1 Implement idempotent initialization, configurable internal/external content roots, automatic unique job folders, and private-state ignore guidance; verify repeated initialization preserves existing app files and duplicate titles never overwrite jobs.
+- [x] 3.1 Implement idempotent initialization, configurable internal/external content roots, automatic unique job folders, and private-state ignore guidance; verify repeated initialization preserves existing app files and duplicate titles never overwrite jobs.
 - [ ] 3.2 Implement profile/preset resolution with the documented precedence, policy ceilings, setting origins, and revision snapshots; verify job overrides work while content profiles cannot relax workspace limits or silently change approved settings.
 - [ ] 3.3 Implement input copying/reference registration, allowed-root checks, fingerprints, and immutable original handling; verify external codebase references remain untouched and symlink/path traversal cannot escape the allowed scope.
 - [ ] 3.4 Implement readable brief/job/plan projections and deliberate import of edited files as validated revisions; verify stale/conflicting edits are surfaced and no external edit is silently ignored or accepted as approval.
