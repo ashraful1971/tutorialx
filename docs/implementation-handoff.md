@@ -1,14 +1,14 @@
 # Implementation handoff
 
-Checkpoint: 2026-11-11. Active OpenSpec change: `build-portable-video-production-system` (spec-driven).
+Checkpoint: 2026-11-12. Active OpenSpec change: `build-portable-video-production-system` (spec-driven).
 
 ## Current state
 
-17 of 98 tasks are complete: groups 1–3 and tasks 4.1–4.2. The foundation includes workspace/settings/source preparation, revision-aware projections/imports, runnable examples, real SQLite metadata/coordination, and pure workflow eligibility/transitions with approval/input/fencing/delivery gates.
+18 of 98 tasks are complete: groups 1–3 and tasks 4.1–4.3. The foundation includes workspace/settings/source preparation, revision-aware projections/imports, runnable examples, SQLite metadata/coordination, workflow policy, and local artifact staging/publication with fenced atomic metadata acceptance and retained orphan inspection.
 
 This is the foundation. Rendering, narration, browser recording, persistent orchestration, and an end-to-end video CLI are not implemented yet. The change remains active; sync final specifications and archive after its implementation is complete.
 
-Validation at this checkpoint: `pnpm check` passed (build, type checking, lint, dependency boundaries, 169 tests, schema drift checks, and package audits). SQLite uses real disk databases/independent connections. Workflow tests cover illegal transitions, approval/input/fencing gates, missing accepted outputs, paused/cancelled revisions, and honest delivery outcomes. Existing public schemas remain unchanged; new schemas are additive. Tested locally on Linux/Node 24; CI covers the declared matrix. Provider/media checks remain fixtures, not live service verification.
+Validation at this checkpoint: `pnpm check` passed (build, type checking, lint, dependency boundaries, 181 tests, schema drift checks, and package audits). Artifact tests use real files/SQLite, an actually killed worker during a partial write, and failures before/after metadata commit. A generated silent PCM WAV exercises measured metadata through a fixture inspector; general media probing/quality and live production providers are not claimed. Existing schemas remain unchanged; additions are versioned. Tested locally on Linux/Node 24; CI covers the declared matrix.
 
 ## Continue on another device
 
@@ -27,7 +27,7 @@ With the OpenSpec CLI available, ask your agent:
 
 ```text
 Use openspec-apply-change for build-portable-video-production-system.
-Read docs/implementation-handoff.md and resume at task 4.3.
+Read docs/implementation-handoff.md and resume at task 4.4.
 Apply, verify, and commit/push completed tasks as instructed by AGENTS.md.
 Sync the specs and archive the change when all implementation tasks are complete.
 ```
@@ -36,7 +36,7 @@ The skill lives at `.agents/skills/openspec-apply-change/SKILL.md`. All planning
 
 ## Next task
 
-Task 4.3 implements local artifact staging, checksums, manifest validation, atomic acceptance, and orphan retention. Verify partial writes/crashes before metadata commit never become successful outputs. Keep workflow policy in core and bytes/metadata effects in adapters. See `docs/workflow.md`, `docs/persistence.md`, and ADR 0002; `tests/conformance/repository-suite.ts` is reusable for PostgreSQL.
+Task 4.4 implements input lineage/fingerprints and selective dependent invalidation. Verify caption style, narration, source, and aspect-ratio changes preserve unaffected work and cannot retain a stale final-delivery pointer. Keep workflow policy in core and effects in adapters. See `docs/artifacts.md`, `docs/workflow.md`, `docs/persistence.md`, and ADRs 0002–0003; the repository conformance suite is reusable for PostgreSQL.
 
 Provider extension guidance is in `docs/providers.md`, `docs/contract-evolution.md`, and `examples/providers/README.md`. The example imports only the public contracts and Node built-ins; its public registration/conformance exercise lives in `tests/conformance/recorded-voice.test.ts`.
 

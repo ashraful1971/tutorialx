@@ -4,7 +4,7 @@ An open-source video-production engine designed to work through an installable a
 
 ## Current status
 
-Active implementation. Public package APIs support workspace initialization, profile/settings resolution, source registration, provider negotiation, revision-aware projections, and [SQLite metadata/coordination](docs/persistence.md). Run the [workspace example](examples/workspaces/README.md) to create a sample job in a dedicated folder or an existing app. Video-production commands and the installable TutorialX skill are not ready yet. Follow the [implementation checklist](openspec/changes/build-portable-video-production-system/tasks.md) for verified progress; unchecked tasks are not shipped features.
+Active implementation. Public package APIs support workspace initialization, profile/settings resolution, source registration, provider negotiation, revision-aware projections, [SQLite metadata/coordination](docs/persistence.md), and [artifact staging/acceptance](docs/artifacts.md). Run the [workspace example](examples/workspaces/README.md) to create a sample job in a dedicated folder or an existing app. Video-production commands and the installable TutorialX skill are not ready yet. Follow the [implementation checklist](openspec/changes/build-portable-video-production-system/tasks.md) for verified progress; unchecked tasks are not shipped features.
 
 ## Develop locally
 

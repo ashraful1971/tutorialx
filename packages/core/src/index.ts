@@ -1,4 +1,5 @@
 export type { ContractVersion } from '@tutorialx/contracts';
+export * from './jobs/artifact-acceptance.js';
 export * from './jobs/workflow.js';
 export * from './providers/requirements.js';
 export * from './providers/selection.js';

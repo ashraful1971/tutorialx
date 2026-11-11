@@ -94,6 +94,15 @@ function completedStage(context: WorkflowContext, stage: StageDefinition): boole
   );
 }
 
+export function workflowProgress(
+  context: WorkflowContext,
+): Pick<JobStatus, 'completedStages' | 'totalStages'> {
+  return {
+    completedStages: context.graph.stages.filter((stage) => completedStage(context, stage)).length,
+    totalStages: context.graph.stages.length,
+  };
+}
+
 export function evaluateStageEligibility(
   context: WorkflowContext,
   stageId: string,

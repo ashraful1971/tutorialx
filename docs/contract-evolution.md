@@ -21,3 +21,5 @@ Declare capabilities conservatively. Adding a new feature string does not change
 Simulated fixture results prove only the behavior exercised. A hosted service, optional speech runtime, actual spoken-word quality, and alignment each need their own named integration evidence before being described as supported production paths.
 
 The SQLite addition introduces `ResearchRepository` and `JobRevisionRepository` as separate public ports. Research records share the owning job transaction through `commitResearch`; existing `JobRepository` consumers/implementations retain their original methods. The local database migration version starts at one and does not change portable record schemas.
+
+Artifact staging adds the `StagedArtifact` and `ArtifactLineage` schemas and an `ArtifactStaging` port. Existing artifact, provider, repository, and workflow schemas are preserved. Staging receipt version one describes private complete-file intent; it is not an approval or an accepted artifact record.

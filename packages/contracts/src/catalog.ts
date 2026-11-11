@@ -6,6 +6,7 @@ import {
   paginationSchema,
 } from './actions.js';
 import { approvalRecordSchema } from './approval.js';
+import { artifactLineageSchema, stagedArtifactSchema } from './artifact-staging.js';
 import { artifactManifestSchema } from './artifacts.js';
 import { batchManifestSchema } from './batch.js';
 import { CONTRACT_VERSION } from './common.js';
@@ -58,6 +59,7 @@ export const PUBLIC_SCHEMAS = {
   AlignmentResult: alignmentResultSchema,
   ApprovalRecord: approvalRecordSchema,
   ArtifactManifest: artifactManifestSchema,
+  ArtifactLineage: artifactLineageSchema,
   AssetResult: assetResultSchema,
   BatchManifest: batchManifestSchema,
   CaptionTrack: captionTrackSchema,
@@ -92,6 +94,7 @@ export const PUBLIC_SCHEMAS = {
   SourceManifest: sourceManifestSchema,
   SourceRegistration: sourceRegistrationSchema,
   StageAttempt: stageAttemptSchema,
+  StagedArtifact: stagedArtifactSchema,
   StageDefinition: stageDefinitionSchema,
   Timeline: timelineSchema,
   VoiceResult: voiceResultSchema,

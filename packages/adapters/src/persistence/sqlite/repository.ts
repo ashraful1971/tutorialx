@@ -191,6 +191,13 @@ export function sqliteRepository(
         )
           throw new MetadataConflict('Attempt revision or lease token is invalid.');
         if (
+          previous?.lease &&
+          attempt.lease &&
+          previous.lease.token === attempt.lease.token &&
+          previous.lease.workerId !== attempt.lease.workerId
+        )
+          throw new MetadataConflict('Changing the attempt owner requires a newer fencing token.');
+        if (
           attempt.status === 'succeeded' &&
           previous?.status !== 'succeeded' &&
           (previous?.status !== 'running' ||

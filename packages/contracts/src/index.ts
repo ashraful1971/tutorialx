@@ -1,5 +1,6 @@
 export * from './actions.js';
 export * from './approval.js';
+export * from './artifact-staging.js';
 export * from './artifacts.js';
 export * from './batch.js';
 export * from './catalog.js';
