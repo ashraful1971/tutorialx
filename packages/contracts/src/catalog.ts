@@ -9,8 +9,27 @@ import { approvalRecordSchema } from './approval.js';
 import { artifactLineageSchema, stagedArtifactSchema } from './artifact-staging.js';
 import { artifactManifestSchema } from './artifacts.js';
 import { batchManifestSchema } from './batch.js';
+import {
+  jobContextInputSchema,
+  jobIdentityInputSchema,
+  jobInspectInputSchema,
+  jobSubmitInputSchema,
+  listInputSchema,
+  planApproveInputSchema,
+  planDiffInputSchema,
+  planReviseInputSchema,
+  planShowInputSchema,
+  revisionFeedbackSchema,
+  schemaInputSchema,
+  sourceCreateInputSchema,
+  sourceInspectInputSchema,
+  sourceListInputSchema,
+  submissionInspectInputSchema,
+  workspaceInitInputSchema,
+} from './cli-actions.js';
 import { CONTRACT_VERSION } from './common.js';
 import { deliveryManifestSchema } from './delivery.js';
+import { doctorInputSchema, doctorReportSchema } from './doctor.js';
 import {
   executionEventSchema,
   jobStatusSchema,
@@ -18,11 +37,17 @@ import {
   stageAttemptSchema,
 } from './execution.js';
 import {
+  artifactListInputSchema,
+  artifactReadInputSchema,
+  eventsInputSchema,
+} from './inspection.js';
+import {
   currentDeliveryPointerSchema,
   stageInputSchema,
   stageLineageSchema,
   workflowSnapshotSchema,
 } from './lineage.js';
+import { operationReceiptSchema, operationRetryPolicySchema } from './operations.js';
 import {
   jobBriefSchema,
   jobCreationSchema,
@@ -46,7 +71,24 @@ import {
   providerRequirementsSchema,
 } from './providers/selection.js';
 import { qualityFindingSchema, qualityProfileSchema, reviewResultSchema } from './quality.js';
+import {
+  readerFormatCapabilitySchema,
+  sourceMediaMetadataSchema,
+  sourceReadReportSchema,
+} from './readers.js';
+import { recipeDefinitionSchema, resolvedProductionBriefSchema } from './recipes.js';
+import {
+  externalResearchSubmissionSchema,
+  researchAssessmentSchema,
+  researchClaimUseSchema,
+  researchConflictSchema,
+  researchEvidenceObservationSchema,
+  researchTaskPackSchema,
+} from './research.js';
+import { productionScriptSchema, scriptSceneSchema } from './script.js';
 import { effectiveSettingsSchema, settingsOverridesSchema, settingsSchema } from './settings.js';
+import { skillCommandInputSchema } from './skill-actions.js';
+import { managedSkillManifestSchema } from './skill-installation.js';
 import {
   evidenceRecordSchema,
   researchReportSchema,
@@ -58,6 +100,29 @@ import { stageDefinitionSchema, workflowGraphSchema } from './workflow.js';
 import { profileSchema, workspaceConfigSchema } from './workspace.js';
 
 export const PUBLIC_SCHEMAS = {
+  ScriptScene: scriptSceneSchema,
+  ProductionScript: productionScriptSchema,
+  RecipeDefinition: recipeDefinitionSchema,
+  ResolvedProductionBrief: resolvedProductionBriefSchema,
+  JobInspectInput: jobInspectInputSchema,
+  PlanShowInput: planShowInputSchema,
+  PlanDiffInput: planDiffInputSchema,
+  PlanApproveInput: planApproveInputSchema,
+  PlanReviseInput: planReviseInputSchema,
+  ArtifactListInput: artifactListInputSchema,
+  ArtifactReadInput: artifactReadInputSchema,
+  EventsInput: eventsInputSchema,
+  WorkspaceInitInput: workspaceInitInputSchema,
+  JobIdentityInput: jobIdentityInputSchema,
+  ListInput: listInputSchema,
+  SourceCreateInput: sourceCreateInputSchema,
+  SourceInspectInput: sourceInspectInputSchema,
+  SourceListInput: sourceListInputSchema,
+  JobContextInput: jobContextInputSchema,
+  RevisionFeedback: revisionFeedbackSchema,
+  JobSubmitInput: jobSubmitInputSchema,
+  SubmissionInspectInput: submissionInspectInputSchema,
+  SchemaInput: schemaInputSchema,
   ActionDescriptor: actionDescriptorSchema,
   ActionRequest: actionRequestSchema,
   ActionResponse: actionResponseSchema,
@@ -73,6 +138,8 @@ export const PUBLIC_SCHEMAS = {
   CostEstimate: costEstimateSchema,
   CurrentDeliveryPointer: currentDeliveryPointerSchema,
   DeliveryManifest: deliveryManifestSchema,
+  DoctorInput: doctorInputSchema,
+  DoctorReport: doctorReportSchema,
   EffectiveSettings: effectiveSettingsSchema,
   EvidenceRecord: evidenceRecordSchema,
   ExecutionEvent: executionEventSchema,
@@ -80,7 +147,11 @@ export const PUBLIC_SCHEMAS = {
   JobCreation: jobCreationSchema,
   JobProjection: jobProjectionSchema,
   JobStatus: jobStatusSchema,
+  ManagedSkillManifest: managedSkillManifestSchema,
+  SkillCommandInput: skillCommandInputSchema,
   OperationRecord: operationRecordSchema,
+  OperationReceipt: operationReceiptSchema,
+  OperationRetryPolicy: operationRetryPolicySchema,
   Pagination: paginationSchema,
   PlanRevision: planRevisionSchema,
   PlanProjection: planProjectionSchema,
@@ -92,8 +163,17 @@ export const PUBLIC_SCHEMAS = {
   QualityFinding: qualityFindingSchema,
   QualityProfile: qualityProfileSchema,
   ReaderResult: readerResultSchema,
+  ReaderFormatCapability: readerFormatCapabilitySchema,
+  SourceMediaMetadata: sourceMediaMetadataSchema,
+  SourceReadReport: sourceReadReportSchema,
   RenderResult: renderResultSchema,
   ResearchReport: researchReportSchema,
+  ExternalResearchSubmission: externalResearchSubmissionSchema,
+  ResearchAssessment: researchAssessmentSchema,
+  ResearchClaimUse: researchClaimUseSchema,
+  ResearchConflict: researchConflictSchema,
+  ResearchEvidenceObservation: researchEvidenceObservationSchema,
+  ResearchTaskPack: researchTaskPackSchema,
   ReviewResult: reviewResultSchema,
   ScenePlan: scenePlanSchema,
   Settings: settingsSchema,

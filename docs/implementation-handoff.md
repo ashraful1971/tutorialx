@@ -4,44 +4,38 @@ Checkpoint: 2026-11-12. Active OpenSpec change: `build-portable-video-production
 
 ## Current state
 
-19 of 98 tasks are complete: groups 1–3 and tasks 4.1–4.4. The foundation includes workspace/settings/source preparation, revision-aware projections/imports, runnable examples, SQLite metadata/coordination, workflow policy, local artifact staging/publication with fenced atomic metadata acceptance and retained orphan inspection, and durable stage-input lineage with selective invalidation and guarded delivery tombstones.
+32 of 98 tasks are complete: groups 1–5, task 6.1, tasks 7.1–7.2, and task 7.4. M1 is complete. This session pulled the other-device work at `d178f6b` before implementation.
 
-Stopped after task 4.4 at the user's request. Task 4.5 has not been started.
+The foundation now includes durable operation receipts and usage reservations, bounded retries/deadlines, cancellation accounting, public recovery inspection, a schema-backed CLI, operator-only approval, persisted execution requests, cursor events/artifact reads, recipe diagnostics, and a bundled managed Codex/Claude Code skill. The M1 gate installed four local package tarballs in a clean Linux arm64 Node 22.14.0 container with only read-only packages/script mounted. Both workspace styles retained app files, installed skills, accepted research/plans, and reloaded revision four at the approval wait. See `docs/quickstart.md` and `docs/verification/m1-foundation.json`.
 
-This is the foundation. Rendering, narration, browser recording, persistent orchestration, and an end-to-end video CLI are not implemented yet. The change remains active; sync final specifications and archive after its implementation is complete.
+Bounded text/Markdown/code/HTML/DOCX/PDF and media-metadata readers are implemented. Optional PDF extraction and real generated MP4/FLAC probing were exercised locally; temporary binaries and generated media are outside Git. Resolved recipe briefs, shared plan validation, derived production scripts/storyboards, and exact-revision approval are implemented without changing existing version-one schemas.
 
-Validation at this checkpoint: `pnpm check` passed (build, type checking, lint, dependency boundaries, 200 tests, schema drift checks, and package audits). Artifact tests use real files/SQLite, an actually killed worker during a partial write, and failures before/after metadata commit. Lineage tests cover caption style, narration, source, and aspect-ratio edits, retained compatible attempts/bytes, affected running leases, paused state, guarded imports, pointer contention, missing-reference rollback, and SQLite v1-to-v2 history preservation. A generated silent PCM WAV exercises measured metadata through a fixture inspector; the lineage workflow uses accepted JSON fixtures, not production video. General media probing/quality and live production providers are not claimed. Existing schemas remain unchanged; additions are versioned. Tested locally on Linux/Node 24; CI covers the declared matrix.
+Rendering, synthesis, verified browser recording, persistent workers, production quality gates, cloud execution, and checked video delivery remain unfinished. Accepted run/check/export requests are durable worker requests, not completed production. Do not archive or claim the complete change is implemented.
+
+Validation: `pnpm check` passed (build, package/test type checking, lint, boundaries, 284 tests passed with one optional media case explicitly skipped, schema checks, and package audits). The optional reader case is exercised separately with `TUTORIALX_TEST_FFMPEG` / `TUTORIALX_TEST_FFPROBE`; its fixture uses actual generated H264/AAC MP4 and FLAC. Existing public schemas were compared structurally with the prior checkpoint and remain unchanged; new schemas are additive. Metadata migration three adds operation receipts while preserving previous history. See `docs/readers.md`, `docs/planning.md`, `docs/approval.md`, and `docs/operations.md` for scope and limits.
+
+All three subagents reached the account usage limit during the next research/planning work. Their written code is preserved, but tasks 6.3 and 6.4 are **not complete**: additive research schemas and core evidence/task-pack helpers are groundwork, without finished public transport integration or the required full acceptance tests. Do not infer completion from exported helper names. Task 7.3 and later planning tasks have not been completed.
+
+The user explicitly deferred real Google speech and WordPress integration testing: “i will test them later.” Keep those live-test criteria visibly pending; do not replace them with fixture-only claims or mark their tasks complete without the required evidence.
 
 ## Continue on another device
-
-Clone the repository, or pull `main` in an existing clean checkout:
 
 ```sh
 git clone https://github.com/ashraful1971/tutorialx.git
 cd tutorialx
 pnpm install --frozen-lockfile
 pnpm check
+pnpm foundation:gate --container
 ```
 
-Use Node 22.12+ in the Node 22 line, Node 24, or Node 26, and pnpm 11.25.0 as pinned in `package.json`. Install these prerequisites on the new device if needed. No provider credentials, downloaded models, or private video workspace are required for the current checks.
+Use Node 22.12+ in the Node 22 line, Node 24, or Node 26, and pnpm 11.25.0. SQLite on Node 22.12 requires `--experimental-sqlite`; the optional PDF runtime requires Node 22.13+. Docker is needed only for the clean-container gate. Core checks require no cloud credentials or Python. The HTTP source fixture needs local loopback access.
 
-With the OpenSpec CLI available, ask your agent:
+Use `.agents/skills/openspec-apply-change/SKILL.md`, read the active artifacts, and refresh `openspec instructions apply --change build-portable-video-production-system --json` before editing checkboxes. Resume at 6.2, then audit/finish the written 6.3–6.4 groundwork and remaining tasks. Preserve the unchecked live integration criteria deferred by the user.
 
-```text
-Use openspec-apply-change for build-portable-video-production-system.
-Read docs/implementation-handoff.md and resume at task 4.5.
-Apply, verify, and commit/push completed tasks as instructed by AGENTS.md.
-Sync the specs and archive the change when all implementation tasks are complete.
-```
+## Ownership and recovery
 
-The skill lives at `.agents/skills/openspec-apply-change/SKILL.md`. All planning artifacts and the authoritative task checklist are in `openspec/changes/build-portable-video-production-system/`. Refresh progress using `openspec instructions apply --change build-portable-video-production-system --json` before implementing.
+Core owns policy and receives explicit effects through ports; adapters own filesystem, clocks/timers, subprocesses, network, and persistence. `createOperationExecutor` requires an injected runtime; the local adapter supplies `createNativeOperationRuntime`. Operation receipt completion/reconciliation accounts for charges but cannot accept stage artifacts. Preserve unknown charges, reconcile side effects before retry, and never treat asynchronous request acceptance as success.
 
-## Next task
+SQLite is authoritative; readable job/plan files are projections or deliberate validated submissions. Every future delivery publisher must share `output/.current-delivery.lock` and check current revision/readiness. Invalidation tombstones precede metadata, so failures can hide an old delivery conservatively. Do not automatically steal abandoned locks or restore old ready pointers. Inspect authoritative state after ambiguous responses.
 
-Task 4.5 implements operation receipts, failure classes, reservation/actual usage accounting, bounded retries/deadlines, and pause/cancel semantics. Verify concurrent budget requests, uncertain external outcomes, and cancellation preserve correct state. Existing SQLite coordination primitives are a foundation, not a complete operation execution service. Keep policy in core and effects in adapters. See `docs/lineage.md`, `docs/artifacts.md`, `docs/workflow.md`, `docs/persistence.md`, and ADRs 0002–0004; the repository conformance suite is reusable for PostgreSQL.
-
-Workflow snapshots use the additive `WorkflowRepository` port and SQLite schema migration two. Every future delivery publisher must share the `output/.current-delivery.lock` guard and check authoritative revision/readiness. Invalidation tombstones precede metadata, so failures can hide an old delivery conservatively. Inspect repository state after ambiguous responses; abandoned locks require reconciliation, not automatic stealing or restoring an old ready pointer. Raw projection imports require the pointer port when a current pointer exists and retain conservative whole-workflow invalidation.
-
-Provider extension guidance is in `docs/providers.md`, `docs/contract-evolution.md`, and `examples/providers/README.md`. The example imports only the public contracts and Node built-ins; its public registration/conformance exercise lives in `tests/conformance/recorded-voice.test.ts`.
-
-Keep the intended portable engine and installable skill architecture. Use the existing contracts instead of coupling core logic to one renderer, voice service, AI host, or cloud platform. Repository-local Git identity and synchronization requirements are in `AGENTS.md`; do not copy machine-specific credentials or private media into Git.
+Repository-local author identity and commit/push requirements are in `AGENTS.md`. Keep private workspaces, credentials, sessions, recordings, and generated media outside Git. The bundled skill and authored verification reports are intentional distributable artifacts. Do not publish packages or containers without a separate release request.

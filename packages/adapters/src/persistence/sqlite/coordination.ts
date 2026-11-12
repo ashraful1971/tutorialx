@@ -36,13 +36,10 @@ function reservation(input: UsageReservation): UsageReservation {
   return value;
 }
 
-export function sqliteCoordination(
+export function sqliteUsage(
   db: SqliteDatabase,
-  base: Pick<
-    ResourceCoordinator,
-    'descriptor' | 'validateConfiguration' | 'readiness' | 'estimate'
-  >,
-): ResourceCoordinator {
+  transaction: SqliteDatabase['transaction'] = db.transaction,
+) {
   const read = (id: string) =>
     db.decode<UsageReservation>(db.get('SELECT json FROM usage WHERE id=?', idSchema.parse(id)));
   function required(id: string) {
@@ -71,13 +68,12 @@ export function sqliteCoordination(
     };
   }
   return {
-    ...base,
-    async reserveUsage(input) {
+    reserveUsage(input: UsageReservation) {
       db.requireReady();
       const value = reservation(input);
       if (value.state !== 'reserved' || value.actualUsdMicros !== null)
         throw new Error('New reservations must be reserved with unknown actual usage.');
-      db.transaction(() => {
+      transaction(() => {
         const existing = read(value.id);
         if (existing) {
           if (
@@ -127,10 +123,10 @@ export function sqliteCoordination(
           );
       });
     },
-    async settleUsage(id, actual) {
+    settleUsage(id: string, actual: number) {
       db.requireReady();
       usdMicrosSchema.parse(actual);
-      db.transaction(() => {
+      transaction(() => {
         const value = required(id);
         if (value.state === 'settled') {
           if (value.actualUsdMicros !== actual)
@@ -140,9 +136,9 @@ export function sqliteCoordination(
         store({ ...value, actualUsdMicros: actual, state: 'settled' });
       });
     },
-    async markUsageUncertain(id) {
+    markUsageUncertain(id: string) {
       db.requireReady();
-      db.transaction(() => {
+      transaction(() => {
         const value = required(id);
         if (value.state === 'uncertain') return;
         if (value.state !== 'reserved')
@@ -150,9 +146,9 @@ export function sqliteCoordination(
         store({ ...value, state: 'uncertain' });
       });
     },
-    async releaseUsage(id) {
+    releaseUsage(id: string) {
       db.requireReady();
-      db.transaction(() => {
+      transaction(() => {
         const value = required(id);
         if (value.state === 'released') return;
         if (value.state !== 'reserved')
@@ -160,10 +156,25 @@ export function sqliteCoordination(
         store({ ...value, state: 'released' });
       });
     },
-    async usage(scopeId) {
-      db.requireReady();
-      return usage(scopeId);
-    },
+    usage,
+  };
+}
+
+export function sqliteCoordination(
+  db: SqliteDatabase,
+  base: Pick<
+    ResourceCoordinator,
+    'descriptor' | 'validateConfiguration' | 'readiness' | 'estimate'
+  >,
+): ResourceCoordinator {
+  const ledger = sqliteUsage(db);
+  return {
+    ...base,
+    reserveUsage: async (input) => ledger.reserveUsage(input),
+    settleUsage: async (id, actual) => ledger.settleUsage(id, actual),
+    markUsageUncertain: async (id) => ledger.markUsageUncertain(id),
+    releaseUsage: async (id) => ledger.releaseUsage(id),
+    usage: async (id) => ledger.usage(id),
     async acquireResource(resourceId, ownerId, expiresAt) {
       db.requireReady();
       idSchema.parse(resourceId);

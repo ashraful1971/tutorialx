@@ -13,6 +13,7 @@ import {
   type WorkspaceConfig,
   type WorkspaceProjectionFiles,
 } from '@tutorialx/contracts';
+import { compileProductionScript, renderStoryboardProjection } from '../planning/script.js';
 import { assertSettingsPolicy } from './settings.js';
 
 export class ProjectionRevisionConflict extends Error {
@@ -95,8 +96,8 @@ export function workspaceProjectionDocuments(
       baseJobRevision: job.status.revision,
       document: plan,
     });
-    files[`${prefix}/storyboard.md`] =
-      `# Storyboard: revision ${plan.revision}\n\nReview projection. Submit edits through plan.json; this document cannot authorize production.\n\n${plan.scenes.map((scene) => `## ${scene.title}\n\nNarration:\n${quote(scene.narration)}\n\nIntent:\n${quote(scene.intent)}\n\nVisual:\n\`\`\`json\n${json(scene.visual)}\`\`\`\n`).join('\n')}`;
+    files[`${prefix}/script.json`] = json(compileProductionScript(plan));
+    files[`${prefix}/storyboard.md`] = renderStoryboardProjection(plan);
   }
   return files;
 }
@@ -167,7 +168,10 @@ export async function importWorkspaceProjection(input: {
       .filter((plan) => plan.basedOnJobRevision >= current.brief.revision)
       .sort((a, b) => b.revision - a.revision)[0] ?? null;
   const before = workspaceProjectionDocuments(current, latest);
-  if (!(input.path in before) || input.path.endsWith('storyboard.md'))
+  if (
+    !(input.path in before) ||
+    (!['brief.md', 'job.json'].includes(input.path) && !input.path.endsWith('/plan.json'))
+  )
     throw new Error(
       'Import brief.md, job.json, or the current plan.json; storyboard Markdown is a review projection.',
     );

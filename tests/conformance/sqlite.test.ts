@@ -89,7 +89,7 @@ it('rejects unsupported future schemas and another workspace without mutating th
     await value.primary.repository.close();
     const { DatabaseSync } = await import('node:sqlite');
     const db = new DatabaseSync(value.filename);
-    db.exec('PRAGMA user_version=3');
+    db.exec('PRAGMA user_version=4');
     db.close();
     const future = await createSqlitePersistence({
       filename: value.filename,
@@ -102,9 +102,9 @@ it('rejects unsupported future schemas and another workspace without mutating th
       await future.repository.close();
     }
     const inspect = new DatabaseSync(value.filename);
-    expect(inspect.prepare('PRAGMA user_version').get()?.user_version).toBe(3);
+    expect(inspect.prepare('PRAGMA user_version').get()?.user_version).toBe(4);
     expect(inspect.prepare('SELECT COUNT(*) count FROM jobs').get()?.count).toBe(1);
-    inspect.exec('PRAGMA user_version=2');
+    inspect.exec('PRAGMA user_version=3');
     inspect.close();
     const foreign = await createSqlitePersistence({
       filename: value.filename,
@@ -133,7 +133,9 @@ it('upgrades a version-one database while retaining existing jobs and immutable 
     const { DatabaseSync } = await import('node:sqlite');
     const prior = new DatabaseSync(value.filename);
     // Reconstruct the previous schema by removing only the new, empty v2 table.
-    prior.exec('DROP TABLE workflow_revisions; PRAGMA user_version=1');
+    prior.exec(
+      'DROP TABLE operation_receipts; DROP TABLE workflow_revisions; PRAGMA user_version=1',
+    );
     prior.close();
     const reopened = await value.connect();
     expect(await reopened.revisions.revisions('job_example')).toEqual(revisions);
@@ -141,7 +143,7 @@ it('upgrades a version-one database while retaining existing jobs and immutable 
     expect(await reopened.workflow.readWorkflow('job_example')).toBeNull();
     await reopened.repository.initialize();
     const inspect = new DatabaseSync(value.filename);
-    expect(inspect.prepare('PRAGMA user_version').get()?.user_version).toBe(2);
+    expect(inspect.prepare('PRAGMA user_version').get()?.user_version).toBe(3);
     expect(inspect.prepare('SELECT COUNT(*) count FROM workflow_revisions').get()?.count).toBe(0);
     inspect.close();
   } finally {

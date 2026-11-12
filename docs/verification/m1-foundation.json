@@ -1,0 +1,144 @@
+{
+  "gate": "M1 packed foundation",
+  "platform": "linux",
+  "arch": "arm64",
+  "node": "22.14.0",
+  "result": "passed",
+  "packageCount": 4,
+  "transcript": [
+    {
+      "action": "workspace.init",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "skill.install",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "skill.install",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "workspace.init",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "job.create",
+      "status": "ok",
+      "revision": 1
+    },
+    {
+      "action": "source.create",
+      "status": "ok",
+      "revision": 2
+    },
+    {
+      "action": "job.submit",
+      "status": "ok",
+      "revision": 3
+    },
+    {
+      "action": "job.context",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "job.submit",
+      "status": "ok",
+      "revision": 4
+    },
+    {
+      "action": "job.inspect",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "plan.show",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "capabilities",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "workspaceStyle": "dedicated",
+      "preservedApp": true,
+      "persistedRevision": 4,
+      "outcome": "needs-approval",
+      "productionExecuted": false
+    },
+    {
+      "action": "workspace.init",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "skill.install",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "skill.install",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "workspace.init",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "job.create",
+      "status": "ok",
+      "revision": 1
+    },
+    {
+      "action": "source.create",
+      "status": "ok",
+      "revision": 2
+    },
+    {
+      "action": "job.submit",
+      "status": "ok",
+      "revision": 3
+    },
+    {
+      "action": "job.context",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "job.submit",
+      "status": "ok",
+      "revision": 4
+    },
+    {
+      "action": "job.inspect",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "plan.show",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "action": "capabilities",
+      "status": "ok",
+      "revision": null
+    },
+    {
+      "workspaceStyle": "existing-project",
+      "preservedApp": true,
+      "persistedRevision": 4,
+      "outcome": "needs-approval",
+      "productionExecuted": false
+    }
+  ]
+}

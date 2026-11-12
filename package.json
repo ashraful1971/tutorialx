@@ -8,7 +8,7 @@
     "node": "^22.12.0 || ^24.0.0 || ^26.0.0"
   },
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc --build && node scripts/skill-reference.mjs --bundle",
     "typecheck": "tsc --build --pretty false && tsc --project tsconfig.tests.json",
     "clean": "tsc --build --clean",
     "format": "biome check --write .",
@@ -16,7 +16,10 @@
     "boundaries": "depcruise packages/*/src --config .dependency-cruiser.cjs --output-type err-long",
     "test": "vitest run",
     "package:audit": "node scripts/package-audit.mjs",
+    "foundation:gate": "pnpm build && node scripts/foundation-gate.mjs",
     "schema:check": "node scripts/schema-catalog.mjs",
+    "skill:check": "node scripts/skill-reference.mjs",
+    "skill:update": "tsc --build && node scripts/skill-reference.mjs --write --bundle",
     "schema:update": "pnpm build && node scripts/schema-catalog.mjs --write",
     "check": "pnpm build && pnpm typecheck && pnpm lint && pnpm boundaries && pnpm test && pnpm schema:check && pnpm package:audit"
   },
@@ -28,6 +31,7 @@
     "@types/node": "22.20.5",
     "dependency-cruiser": "18.7.2",
     "typescript": "6.0.3",
-    "vitest": "5.1.0"
+    "vitest": "5.1.0",
+    "fflate": "0.8.3"
   }
 }

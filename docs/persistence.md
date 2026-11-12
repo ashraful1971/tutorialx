@@ -1,6 +1,9 @@
 # Local SQLite metadata
 
-`createSqlitePersistence({ filename, workspaceId, now })` from `@tutorialx/adapters` supplies the public job repository, research repository, workflow repository, revision-history reader, and resource coordinator. All five ports share one connection/transaction authority. Closing `repository` closes the entire store. Use a private workspace path such as `.tutorialx/state.sqlite`; initialize the parent workspace first.
+See [local inspection and recovery](local-recovery.md) for state ownership,
+bounded public inspection, receipt reconciliation, and expired-attempt release.
+
+`createSqlitePersistence({ filename, workspaceId, now })` from `@tutorialx/adapters` supplies the public job repository, research repository, workflow repository, operation repository, revision-history reader, and resource coordinator. All six ports share one connection/transaction authority. Closing `repository` closes the entire store. Use a private workspace path such as `.tutorialx/state.sqlite`; initialize the parent workspace first.
 
 ```ts
 import { createSqlitePersistence } from '@tutorialx/adapters';
@@ -22,7 +25,7 @@ SQLite is loaded dynamically only when this adapter is selected. It uses the bui
 
 ## Transactions and revisions
 
-Initialization applies transactional migrations and retains a workspace ownership marker. Version one establishes the metadata tables; version two adds immutable workflow input snapshots without rewriting existing records. Repeated/concurrent initialization is safe. A future schema or another workspace identity refuses mutation. WAL, foreign keys, a five-second busy timeout, full synchronous durability, and short `BEGIN IMMEDIATE` write transactions are enabled for supported databases.
+Initialization applies transactional migrations and retains a workspace ownership marker. Version one establishes the metadata tables; version two adds immutable workflow input snapshots; version three adds independently versioned operation receipts. Neither migration rewrites existing portable records. Repeated/concurrent initialization is safe. A future schema or another workspace identity refuses mutation. WAL, foreign keys, a five-second busy timeout, full synchronous durability, and short `BEGIN IMMEDIATE` write transactions are enabled for supported databases.
 
 The schema owns jobs, immutable job revisions, stage/attempt records, immutable artifact/plan/approval/source/evidence records, operation receipts, monotonic event cursors, the dispatch outbox, usage reservations, and resource leases. Runtime records are validated on write and load. Database migrations and portable record schema versions are independent.
 
@@ -36,7 +39,7 @@ Job/artifact lists use bounded ID-order cursor pages. Event cursors are assigned
 
 Budget reservations cover one or more job/batch scopes in one transaction. Concurrent connections cannot reserve more than the configured limit. Scope kind/limit changes are rejected rather than implicitly increasing authorization. Replaying the same reservation after settlement does not allocate it again. Uncertain reservations retain their budget and cannot be released as unused. Actual usage is recorded even when it exceeds the reserved amount; subsequent work is blocked by the observed total. Settlement cannot be silently changed later.
 
-Resource leases are durable across connections and restarts. Renew/release require the current owner, token, and lease identity. Expired/released leases receive a strictly newer token on reacquisition. Repeating an identical live acquisition or release is safe; an older renewal/release cannot disturb a newer owner. These primitives do not replace stage scheduling, cancellation, reservation/operation reconciliation, or retry policy.
+Resource leases are durable across connections and restarts. Renew/release require the current owner, token, and lease identity. Expired/released leases receive a strictly newer token on reacquisition. Repeating an identical live acquisition or release is safe; an older renewal/release cannot disturb a newer owner. The [operation service](operations.md) composes usage primitives with fenced dispatch, receipts, cancellation, and bounded retry policy; stage scheduling and persistent worker recovery remain separate.
 
 Keep SQLite and its WAL files on local storage with private directory permissions. Do not synchronize an active database through a file-sync service or object store. Portable bundles, backup/recovery commands, persistent workers, and PostgreSQL are later tasks. Logs/public events must be redacted by their application boundary; the repository stores accepted records and does not infer which arbitrary strings are secrets.
 

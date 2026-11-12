@@ -16,7 +16,7 @@ Paused/cancelled/failed/finished jobs dispatch no new work. Existing running att
 
 Pending work becomes eligible after its gates pass, then starts only with a live lease. Success/failure requires the latest current input/attempt fence. Success accepts only verified output identities. Waits retain a reason and revoke execution ownership. Cancel/invalidate revoke leases; invalidation retains accepted output references as history. Old inputs, superseded attempts, expired tokens, skipped states, and completion after job cancellation are rejected.
 
-Pausing prevents downstream dispatch while an already running, still-owned attempt may finish. Cancelling prevents accepting that completion as successful work; late external outcomes and usage must be reconciled through the later operation service. Pure transitions do not stop processes, settle charges, or authorize retries themselves.
+Pausing prevents downstream dispatch while an already running, still-owned attempt may finish. Cancelling prevents accepting that completion as successful work; late external outcomes and usage are reconciled through the [operation service](operations.md). Pure transitions do not stop processes, settle charges, or authorize retries themselves.
 
 ## Job outcomes
 

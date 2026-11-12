@@ -1,8 +1,11 @@
 export type { ContractVersion } from '@tutorialx/contracts';
 export * from './persistence/sqlite/index.js';
+export * from './research/local-reader.js';
+export * from './skills/local-installation.js';
 export * from './storage/local/artifact-staging.js';
 export * from './storage/local/delivery-pointer.js';
 export * from './system/fingerprint.js';
+export * from './system/operation-runtime.js';
 export * from './workspace/local-layout.js';
 export * from './workspace/local-projections.js';
 export * from './workspace/local-sources.js';

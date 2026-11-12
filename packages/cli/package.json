@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "TutorialX command, MCP, and worker composition roots",
   "type": "module",
+  "bin": {
+    "tutorialx": "./dist/bin.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -10,6 +13,7 @@
     }
   },
   "files": [
+    "dist/skills/tutorialx/**/*.md",
     "dist/**/*.js",
     "dist/**/*.js.map",
     "dist/**/*.d.ts",
@@ -26,7 +30,7 @@
     "@tutorialx/adapters": "workspace:^"
   },
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc --build && node ../../scripts/skill-reference.mjs --bundle",
     "typecheck": "tsc --build --pretty false"
   }
 }

@@ -1,0 +1,9 @@
+# Maintaining the TutorialX skill
+
+The canonical skill lives in `skills/tutorialx/`. Its entrypoint routes to researcher, writer/director, producer, reviewer and recovery references. Those references explain decisions and handoffs; the engine remains responsible for validation, approvals, state and production.
+
+`references/actions.md` is generated from `FOUNDATION_ACTION_SCHEMAS` and the CLI's public action descriptors. After changing the action surface, build TypeScript and run `node scripts/skill-reference.mjs --write --bundle`. The script writes the compact schema index and copies only the seven explicitly listed instruction files into the CLI's `dist/skills/tutorialx/` package assets. `node scripts/skill-reference.mjs --bundle` checks drift before copying; `node scripts/skill-reference.mjs` only checks drift.
+
+`bundledSkillPackage()` identifies the assets beside the built CLI module and their explicit version for the managed installer. Keep the skill frontmatter metadata, bundle version and CLI package version aligned when making a release. Distribution auditing permits the specific instruction files and excludes arbitrary Markdown, recordings, credentials and workspace content.
+
+`tests/skills/handoff.test.ts` scripts the public action handoff from initialization and source registration through evidence-linked research, persisted retrieval, plan submission and fresh reviewer context. It verifies that a creative principal cannot self-approve and that production honestly waits for operator approval with no accepted delivery. This is deterministic contract coverage, not a claim that an LLM was evaluated or that a video was rendered. The skill frontmatter validator checks naming and structure separately; generation and install fixtures verify schema consistency and portable host layouts.

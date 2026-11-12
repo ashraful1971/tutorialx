@@ -34,22 +34,22 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 - [x] 4.2 Implement pure stage eligibility/transitions and job lifecycle/wait/delivery outcomes; verify planning, approval, missing prerequisite, failure, cancellation, and invalidation transitions reject illegal operations.
 - [x] 4.3 Implement local artifact staging, checksums, manifest validation, atomic acceptance, and orphan retention; verify partial writes and crashes before metadata commit never become successful stage artifacts.
 - [x] 4.4 Implement input lineage/fingerprints and dependent invalidation; verify caption-style, narration, source, and aspect-ratio changes invalidate only affected work with no stale final-delivery pointer.
-- [ ] 4.5 Implement operation receipts, failure classes, reservation/actual usage accounting, bounded retries/deadlines, and pause/cancel semantics; verify concurrent budget requests, uncertain external outcomes, and cancellation preserve correct state.
-- [ ] 4.6 Document state ownership, readable file projections, and local recovery rules; verify an interrupted fixture is inspectable and recoverable without reading private database tables manually.
+- [x] 4.5 Implement operation receipts, failure classes, reservation/actual usage accounting, bounded retries/deadlines, and pause/cancel semantics; verify concurrent budget requests, uncertain external outcomes, and cancellation preserve correct state.
+- [x] 4.6 Document state ownership, readable file projections, and local recovery rules; verify an interrupted fixture is inspectable and recoverable without reading private database tables manually.
 
 ## 5. M1: Mechanical CLI and installable skill
 
-- [ ] 5.1 Implement schema-backed init, job/source creation and inspection, capabilities, context, and submit actions with human/JSON modes; verify stdout stays parseable, responses are bounded, and missing input returns structured next actions without prompting in machine mode.
-- [ ] 5.2 Implement plan show/diff/approve/revise and run/pause/resume/cancel/retry/check/export requests with separate operator and worker/creative capabilities; verify stale approval and attempted self-authorization by a restricted role are rejected.
-- [ ] 5.3 Implement paginated artifact access and cursor-based redacted events with request/job/attempt correlations; verify reconnection receives only later events and known secret values never appear in public output.
-- [ ] 5.4 Implement recipe/provider-specific doctor output, optional dependency discovery, and actionable remedies; verify an absent unused capture/Python/cloud component does not block a supplied-asset recipe.
-- [ ] 5.5 Author the TutorialX skill with progressive researcher, writer/director, producer, and reviewer references generated against the action schemas; verify a scripted agent handoff follows the documented actions without invented shell production steps.
-- [ ] 5.6 Implement managed skill install/update/remove for documented Codex and Claude Code host locations plus generic installation instructions; verify host-layout fixtures preserve unrelated instructions, preview managed changes, and removal retains user videos.
-- [ ] 5.7 Run the M1 foundation gate from a clean machine/container: install the packed package, initialize both workspace styles, submit/validate a plan, inspect next actions, and reload persisted state; record the successful public-command transcript in the quickstart.
+- [x] 5.1 Implement schema-backed init, job/source creation and inspection, capabilities, context, and submit actions with human/JSON modes; verify stdout stays parseable, responses are bounded, and missing input returns structured next actions without prompting in machine mode.
+- [x] 5.2 Implement plan show/diff/approve/revise and run/pause/resume/cancel/retry/check/export requests with separate operator and worker/creative capabilities; verify stale approval and attempted self-authorization by a restricted role are rejected.
+- [x] 5.3 Implement paginated artifact access and cursor-based redacted events with request/job/attempt correlations; verify reconnection receives only later events and known secret values never appear in public output.
+- [x] 5.4 Implement recipe/provider-specific doctor output, optional dependency discovery, and actionable remedies; verify an absent unused capture/Python/cloud component does not block a supplied-asset recipe.
+- [x] 5.5 Author the TutorialX skill with progressive researcher, writer/director, producer, and reviewer references generated against the action schemas; verify a scripted agent handoff follows the documented actions without invented shell production steps.
+- [x] 5.6 Implement managed skill install/update/remove for documented Codex and Claude Code host locations plus generic installation instructions; verify host-layout fixtures preserve unrelated instructions, preview managed changes, and removal retains user videos.
+- [x] 5.7 Run the M1 foundation gate from a clean machine/container: install the packed package, initialize both workspace styles, submit/validate a plan, inspect next actions, and reload persisted state; record the successful public-command transcript in the quickstart.
 
 ## 6. M2: Evidence-backed ingestion and research
 
-- [ ] 6.1 Implement bounded readers for text/Markdown, HTML URLs, PDF/DOCX extraction, code files, and supplied image/audio/video metadata with declared format capabilities; verify each supported fixture yields provenance and unsupported/unreadable sources yield explicit limitations.
+- [x] 6.1 Implement bounded readers for text/Markdown, HTML URLs, PDF/DOCX extraction, code files, and supplied image/audio/video metadata with declared format capabilities; verify each supported fixture yields provenance and unsupported/unreadable sources yield explicit limitations.
 - [ ] 6.2 Implement scoped retrieval, exclusion/size limits, source refresh/fingerprints, and local-only processing restrictions; verify large repositories return bounded relevant extracts and hosted requests are denied under local-only policy.
 - [ ] 6.3 Implement source/evidence records distinguishing claims, inference, and observed app steps; verify conflicting docs and UI observations block an unsupported tutorial claim while an asset-only topic can proceed with sufficient evidence.
 - [ ] 6.4 Implement research task packs and validated external-agent submissions, with source content treated as data; verify malicious reference instructions cannot change job limits, install a provider, or retrieve excluded credentials.
@@ -58,10 +58,10 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 
 ## 7. M2: Briefs, scripts, storyboards, and approval policy
 
-- [ ] 7.1 Implement recipe definitions and effective brief resolution for tutorial, explainer, asset-based, reel, and mixed production; verify recipe choice remains independent of aspect ratio and unknown settings fail validation.
-- [ ] 7.2 Implement schema-checked scripts/scenes with evidence, capture assertions, narration, estimated timing, assets, output variants, and readable review projections; verify a user can review words beside intended actions before final production.
+- [x] 7.1 Implement recipe definitions and effective brief resolution for tutorial, explainer, asset-based, reel, and mixed production; verify recipe choice remains independent of aspect ratio and unknown settings fail validation.
+- [x] 7.2 Implement schema-checked scripts/scenes with evidence, capture assertions, narration, estimated timing, assets, output variants, and readable review projections; verify a user can review words beside intended actions before final production.
 - [ ] 7.3 Implement estimates, explicit research/production allowances, provider preflight, and autonomous-policy evaluation; verify paid operations cannot start without allowance and incomplete topic-only demonstrations remain blocked.
-- [ ] 7.4 Bind approvals to plan/settings/evidence/provider digests and implement material-change detection; verify silence, timeout, stale revisions, changed voice, or changed demonstration steps cannot reuse an unrelated approval.
+- [x] 7.4 Bind approvals to plan/settings/evidence/provider digests and implement material-change detection; verify silence, timeout, stale revisions, changed voice, or changed demonstration steps cannot reuse an unrelated approval.
 - [ ] 7.5 Implement targeted feedback/revision impact reporting and example tutorial/reel presets including all caption modes, voice controls, branding, and no-music options; verify profile changes do not mutate approved jobs and tutorial examples pause at the review gate.
 - [ ] 7.6 Document the review/autonomous modes and operator approval trust model, including hosts without an approval bridge; verify both modes follow the same required evidence and budget gates in acceptance fixtures.
 

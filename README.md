@@ -4,7 +4,7 @@ An open-source video-production engine designed to work through an installable a
 
 ## Current status
 
-Active implementation. Public package APIs support workspace initialization, profile/settings resolution, source registration, provider negotiation, revision-aware projections, [SQLite metadata/coordination](docs/persistence.md), [artifact staging/acceptance](docs/artifacts.md), and [selective input invalidation](docs/lineage.md). Run the [workspace example](examples/workspaces/README.md) to create a sample job in a dedicated folder or an existing app. Video-production commands and the installable TutorialX skill are not ready yet. Follow the [implementation checklist](openspec/changes/build-portable-video-production-system/tasks.md) for verified progress; unchecked tasks are not shipped features.
+Active implementation. The [foundation quickstart](docs/quickstart.md) covers the CLI, managed Codex/Claude Code skill, private workspaces, research/plan handoffs, operator approval, and persisted execution requests. Public APIs also provide [SQLite metadata/coordination](docs/persistence.md), [operation receipts and budgets](docs/operations.md), [artifact acceptance](docs/artifacts.md), [selective invalidation](docs/lineage.md), and [local recovery](docs/local-recovery.md). Media execution and checked-video delivery remain under implementation. Follow the [checklist](openspec/changes/build-portable-video-production-system/tasks.md) for verified progress; unchecked tasks are not shipped features.
 
 ## Develop locally
 

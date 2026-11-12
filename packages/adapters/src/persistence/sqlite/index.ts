@@ -1,6 +1,7 @@
 import type {
   JobRepository,
   JobRevisionRepository,
+  OperationRepository,
   ResearchRepository,
   ResourceCoordinator,
   WorkflowRepository,
@@ -8,6 +9,7 @@ import type {
 import { idSchema } from '@tutorialx/contracts';
 import { sqliteCoordination } from './coordination.js';
 import { sqliteDatabase } from './database.js';
+import { sqliteOperations } from './operations.js';
 import { sqliteRepository } from './repository.js';
 
 export interface SqlitePersistence {
@@ -16,6 +18,7 @@ export interface SqlitePersistence {
   revisions: JobRevisionRepository;
   coordinator: ResourceCoordinator;
   workflow: WorkflowRepository;
+  operations: OperationRepository;
 }
 
 /** SQLite is loaded only when selected. Node 22.12 requires --experimental-sqlite. */
@@ -115,5 +118,5 @@ export async function createSqlitePersistence(options: {
     },
   };
   const ports = sqliteRepository(db, base);
-  return { ...ports, coordinator: sqliteCoordination(db, base) };
+  return { ...ports, coordinator: sqliteCoordination(db, base), operations: sqliteOperations(db) };
 }
