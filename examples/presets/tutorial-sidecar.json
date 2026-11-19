@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "tutorial_sidecar",
+  "createdAt": "2026-11-19T00:00:00Z",
+  "revision": 1,
+  "kind": "preset",
+  "name": "Review-gated tutorial with SRT captions",
+  "settings": {
+    "recipe": "tutorial",
+    "captions": { "mode": "sidecar", "formats": ["srt"], "language": "en-US" },
+    "voice": {
+      "mode": "synthesize",
+      "voiceId": "example-en-us",
+      "pace": 1,
+      "tone": "natural tutorial narration",
+      "pronunciations": { "TutorialX": "tutorial ex" }
+    },
+    "audio": { "music": { "enabled": false }, "effects": false, "ducking": false },
+    "brand": { "name": "TutorialX", "primaryColor": "#176bff" },
+    "providers": {
+      "voice": {
+        "id": "example-voice",
+        "version": "unconfigured",
+        "config": {},
+        "credentialRef": null
+      }
+    },
+    "policy": { "mode": "review" }
+  },
+  "sourceIds": [],
+  "notes": "Authored configuration only; sidecar timing is derived from final accepted narration."
+}

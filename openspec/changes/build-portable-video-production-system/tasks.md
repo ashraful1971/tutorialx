@@ -60,10 +60,10 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 
 - [x] 7.1 Implement recipe definitions and effective brief resolution for tutorial, explainer, asset-based, reel, and mixed production; verify recipe choice remains independent of aspect ratio and unknown settings fail validation.
 - [x] 7.2 Implement schema-checked scripts/scenes with evidence, capture assertions, narration, estimated timing, assets, output variants, and readable review projections; verify a user can review words beside intended actions before final production.
-- [ ] 7.3 Implement estimates, explicit research/production allowances, provider preflight, and autonomous-policy evaluation; verify paid operations cannot start without allowance and incomplete topic-only demonstrations remain blocked.
+- [x] 7.3 Implement estimates, explicit research/production allowances, provider preflight, and autonomous-policy evaluation; verify paid operations cannot start without allowance and incomplete topic-only demonstrations remain blocked.
 - [x] 7.4 Bind approvals to plan/settings/evidence/provider digests and implement material-change detection; verify silence, timeout, stale revisions, changed voice, or changed demonstration steps cannot reuse an unrelated approval.
-- [ ] 7.5 Implement targeted feedback/revision impact reporting and example tutorial/reel presets including all caption modes, voice controls, branding, and no-music options; verify profile changes do not mutate approved jobs and tutorial examples pause at the review gate.
-- [ ] 7.6 Document the review/autonomous modes and operator approval trust model, including hosts without an approval bridge; verify both modes follow the same required evidence and budget gates in acceptance fixtures.
+- [x] 7.5 Implement targeted feedback/revision impact reporting and example tutorial/reel presets including all caption modes, voice controls, branding, and no-music options; verify profile changes do not mutate approved jobs and tutorial examples pause at the review gate.
+- [x] 7.6 Document the review/autonomous modes and operator approval trust model, including hosts without an approval bridge; verify both modes follow the same required evidence and budget gates in acceptance fixtures.
 
 ## 8. M2: Verified browser capture and teaching presentation
 

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "reel_no_captions",
+  "createdAt": "2026-11-19T00:00:00Z",
+  "revision": 1,
+  "kind": "preset",
+  "name": "Branded narration-only reel",
+  "settings": {
+    "recipe": "reel",
+    "captions": { "mode": "none", "formats": [], "language": "en-US" },
+    "voice": {
+      "mode": "synthesize",
+      "voiceId": "example-en-us",
+      "pace": 1,
+      "tone": "concise and friendly",
+      "pronunciations": { "TutorialX": "tutorial ex" }
+    },
+    "audio": { "music": { "enabled": false }, "effects": false, "ducking": false },
+    "brand": { "name": "TutorialX", "primaryColor": "#176bff" },
+    "providers": {
+      "voice": {
+        "id": "example-voice",
+        "version": "unconfigured",
+        "config": {},
+        "credentialRef": null
+      }
+    },
+    "policy": { "mode": "review" }
+  },
+  "sourceIds": [],
+  "notes": "Authored configuration only; captions, music, and effects are explicitly disabled."
+}

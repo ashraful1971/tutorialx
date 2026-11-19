@@ -167,3 +167,140 @@ export function comparePlanRevisions(before: PlanRevision, after: PlanRevision) 
     changes.push('scene-layout-or-timing');
   return { material: changes.length > 0, changes };
 }
+
+const productionStages = [
+  'research',
+  'plan',
+  'approval',
+  'assets',
+  'voice',
+  'capture',
+  'alignment',
+  'timeline',
+  'composition',
+  'render',
+  'technical-review',
+  'editorial-review',
+  'delivery',
+] as const;
+
+/** Explain scene-specific regeneration while preserving unaffected accepted work. */
+export function planRevisionImpact(before: PlanRevision, after: PlanRevision) {
+  const previous = planRevisionSchema.parse(before);
+  const next = planRevisionSchema.parse(after);
+  const summary = comparePlanRevisions(previous, next);
+  const oldScenes = new Map(previous.scenes.map((scene) => [scene.id, scene]));
+  const newScenes = new Map(next.scenes.map((scene) => [scene.id, scene]));
+  const changedSceneIds = new Set<string>();
+  const addedSceneIds = [...newScenes.keys()].filter((id) => !oldScenes.has(id));
+  const removedSceneIds = [...oldScenes.keys()].filter((id) => !newScenes.has(id));
+  const invalidated = new Set<(typeof productionStages)[number]>();
+  const same = (left: unknown, right: unknown) => JSON.stringify(left) === JSON.stringify(right);
+  const downstream = (...stages: (typeof productionStages)[number][]) =>
+    stages.forEach((stage) => invalidated.add(stage));
+
+  for (const id of new Set([...oldScenes.keys(), ...newScenes.keys()])) {
+    const oldScene = oldScenes.get(id);
+    const newScene = newScenes.get(id);
+    if (!oldScene || !newScene) {
+      changedSceneIds.add(id);
+      downstream(
+        'plan',
+        'approval',
+        'assets',
+        'voice',
+        'capture',
+        'alignment',
+        'timeline',
+        'composition',
+        'render',
+        'technical-review',
+        'editorial-review',
+        'delivery',
+      );
+      continue;
+    }
+    if (same(oldScene, newScene)) continue;
+    changedSceneIds.add(id);
+    downstream('plan', 'approval', 'editorial-review', 'delivery');
+    if (oldScene.narration !== newScene.narration)
+      downstream('voice', 'alignment', 'timeline', 'composition', 'render', 'technical-review');
+    if (!same(oldScene.visual, newScene.visual)) {
+      if (oldScene.visual.kind === 'browser' || newScene.visual.kind === 'browser')
+        downstream('capture');
+      if (
+        ['image', 'video'].includes(oldScene.visual.kind) ||
+        ['image', 'video'].includes(newScene.visual.kind)
+      )
+        downstream('assets');
+      downstream('timeline', 'composition', 'render', 'technical-review');
+    }
+    if (
+      oldScene.estimatedDurationUs !== newScene.estimatedDurationUs ||
+      oldScene.transition !== newScene.transition ||
+      !same(oldScene.variantFraming, newScene.variantFraming)
+    )
+      downstream('timeline', 'composition', 'render', 'technical-review');
+  }
+  if (!same(previous.effective.settings.voice, next.effective.settings.voice))
+    downstream(
+      'approval',
+      'voice',
+      'alignment',
+      'timeline',
+      'composition',
+      'render',
+      'technical-review',
+      'editorial-review',
+      'delivery',
+    );
+  if (!same(previous.effective.settings.captions, next.effective.settings.captions))
+    downstream(
+      'approval',
+      'composition',
+      'render',
+      'technical-review',
+      'editorial-review',
+      'delivery',
+    );
+  if (
+    !same(previous.effective.settings.brand, next.effective.settings.brand) ||
+    !same(previous.effective.settings.variants, next.effective.settings.variants) ||
+    !same(previous.effective.settings.audio, next.effective.settings.audio)
+  )
+    downstream(
+      'approval',
+      'composition',
+      'render',
+      'technical-review',
+      'editorial-review',
+      'delivery',
+    );
+  if (
+    previous.evidenceDigest !== next.evidenceDigest ||
+    previous.researchReportId !== next.researchReportId
+  )
+    downstream(...productionStages);
+  if (!same(previous.effective.settings.providers, next.effective.settings.providers))
+    downstream(
+      'approval',
+      'assets',
+      'voice',
+      'capture',
+      'alignment',
+      'composition',
+      'render',
+      'technical-review',
+      'editorial-review',
+      'delivery',
+    );
+
+  return {
+    ...summary,
+    changedSceneIds: [...changedSceneIds].sort(),
+    addedSceneIds: addedSceneIds.sort(),
+    removedSceneIds: removedSceneIds.sort(),
+    invalidatedStages: productionStages.filter((stage) => invalidated.has(stage)),
+    reusableStages: productionStages.filter((stage) => !invalidated.has(stage)),
+  };
+}

@@ -30,5 +30,21 @@ Approval is one gate: stage eligibility still checks prerequisites, budgets,
 deadlines, and quality. A production approval does not include uncertain-retry
 authority unless that scope was explicitly granted.
 
+## Review and autonomous modes
+
+Both modes run the same accepted-evidence, provider capability/readiness, bounded-cost, filesystem/network, mutation, deadline, and quality gates. They differ only in how the exact plan receives production authority:
+
+| Mode | Production authority |
+| --- | --- |
+| `review` | A trusted operator explicitly approves the current plan revision and its evidence/settings/provider digests. |
+| `autonomous` | A separately issued revision-bound policy scope names the allowed recipe, sources, providers, mutation targets, and maximum research/production spending. |
+
+Autonomous mode is not approval inferred from silence. A scope mismatch, missing evidence, failed provider preflight, unknown cost bound, or exhausted allowance stops the job exactly as it does in review mode. Creative roles and workers can submit validated artifacts but cannot expand either form of authority.
+
+An interactive host may expose an approval bridge only when it authenticates the actual operator and conveys the exact revision/decision to the engine. If a host has no such bridge—or its trust model is unknown—the agent must show `plan show`/`plan diff` and direct the operator to `tutorialx plan approve` in the local CLI. Chat text such as “looks good,” an agent-set field, a timeout, or continued conversation is not an approval transport.
+
+Headless execution requires an operator-created autonomous scope before the client disconnects. The scope is persisted independently of the conversation and cannot be minted by the headless runner. Changing a source fingerprint, provider/voice, demonstration action, mutation target, cost allowance, or plan revision requires reevaluation and usually a new scope or human approval.
+
 Tests cover restricted roles, stale revisions, silence, expiry, unverified origins,
-changed evidence/voice/actions/settings/providers, and material-change reports.
+changed evidence/voice/actions/settings/providers, material-change reports, and
+shared evidence/provider/budget failures in review and autonomous modes.

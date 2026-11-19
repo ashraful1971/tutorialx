@@ -43,10 +43,10 @@ import {
   workspaceInitInputSchema,
 } from '@tutorialx/contracts';
 import {
-  comparePlanRevisions,
   createWorkspaceJob,
   evaluatePlanApproval,
   initializeWorkspace,
+  planRevisionImpact,
   redactPublicValue,
   registerWorkspaceSource,
   resolveSettings,
@@ -658,7 +658,7 @@ export function createActionService(options: ActionServiceOptions) {
         return ok({
           beforeRevision: before.revision,
           afterRevision: after.revision,
-          ...comparePlanRevisions(before, after),
+          ...planRevisionImpact(before, after),
         });
       }
       if (request.action === 'plan.revise') {

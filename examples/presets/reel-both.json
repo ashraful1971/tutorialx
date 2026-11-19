@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "reel_both",
+  "createdAt": "2026-11-19T00:00:00Z",
+  "revision": 1,
+  "kind": "preset",
+  "name": "Branded reel with embedded and VTT captions",
+  "settings": {
+    "recipe": "reel",
+    "variants": [
+      {
+        "id": "vertical",
+        "aspectRatio": "9:16",
+        "width": 1080,
+        "height": 1920,
+        "frameRate": { "numerator": 30, "denominator": 1 },
+        "codec": "h264",
+        "container": "mp4",
+        "thumbnail": true
+      }
+    ],
+    "captions": { "mode": "both", "formats": ["vtt"], "language": "en-US" },
+    "voice": {
+      "mode": "synthesize",
+      "voiceId": "example-en-us",
+      "pace": 1.08,
+      "tone": "energetic but natural",
+      "pronunciations": { "TutorialX": "tutorial ex" }
+    },
+    "audio": { "music": { "enabled": false }, "effects": false, "ducking": false },
+    "brand": { "name": "TutorialX", "primaryColor": "#176bff" },
+    "providers": {
+      "voice": {
+        "id": "example-voice",
+        "version": "unconfigured",
+        "config": {},
+        "credentialRef": null
+      }
+    },
+    "policy": { "mode": "review" }
+  },
+  "sourceIds": [],
+  "notes": "Authored configuration only; no soundtrack or effects are introduced by this preset."
+}

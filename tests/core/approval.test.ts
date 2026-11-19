@@ -1,5 +1,10 @@
 import { fingerprintJson } from '@tutorialx/adapters';
-import { comparePlanRevisions, createPlanApproval, evaluatePlanApproval } from '@tutorialx/core';
+import {
+  comparePlanRevisions,
+  createPlanApproval,
+  evaluatePlanApproval,
+  planRevisionImpact,
+} from '@tutorialx/core';
 import { describe, expect, it } from 'vitest';
 import { samplePlan, timestamp } from '../fixtures/contracts.js';
 
@@ -103,5 +108,36 @@ describe('revision-bound operator approval', () => {
     expect(comparePlanRevisions(original, next).changes).toContain('voice');
     next.jobId = 'another_job';
     expect(() => comparePlanRevisions(original, next)).toThrow('different jobs');
+  });
+
+  it('reports targeted scene impacts and preserves unaffected research and capture', () => {
+    const original = samplePlan();
+    original.scenes.push({
+      ...structuredClone(original.scenes[0]!),
+      id: 'second_scene',
+      title: 'Second scene',
+      narration: 'This scene remains unchanged.',
+    });
+    const next = structuredClone(original);
+    next.revision++;
+    next.scenes[0]!.narration = 'A shorter approved introduction.';
+    const impact = planRevisionImpact(original, next);
+    expect(impact.changedSceneIds).toEqual(['intro']);
+    expect(impact.invalidatedStages).toEqual(
+      expect.arrayContaining([
+        'approval',
+        'voice',
+        'alignment',
+        'timeline',
+        'composition',
+        'render',
+        'technical-review',
+        'editorial-review',
+        'delivery',
+      ]),
+    );
+    expect(impact.reusableStages).toEqual(
+      expect.arrayContaining(['research', 'assets', 'capture']),
+    );
   });
 });
