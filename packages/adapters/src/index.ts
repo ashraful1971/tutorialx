@@ -1,4 +1,5 @@
 export type { ContractVersion } from '@tutorialx/contracts';
+export * from './capture/playwright.js';
 export * from './persistence/sqlite/index.js';
 export * from './research/local-reader.js';
 export * from './skills/local-installation.js';
