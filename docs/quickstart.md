@@ -41,6 +41,8 @@ returns source/evidence references, effective settings, legal next actions, and
 the submission schema. Submit evidence-linked research, then a plan, through
 `job submit`. Reopen with `job inspect JOBID --json`; every command reloads
 authoritative persisted state. Missing input returns structured next actions.
+Complete input examples for links, files, folders, codebases, supplied media,
+profiles, and reusable references are in [supplying research inputs](research-inputs.md).
 
 Use `plan show` and `plan diff` for review. `plan approve` requires an explicit
 operator decision covering the exact current revision. Creative/worker scopes

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { mkdtemp, rm, symlink, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, stat, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import {
@@ -102,6 +102,57 @@ describe('foundation action service', () => {
         )
       ).status,
     ).toBe('error');
+  });
+
+  it('registers documented research material shapes through public actions without moving originals', async () => {
+    const { call, jobId, directory } = await setup();
+    await mkdir(resolve(directory, 'references', 'feature'), { recursive: true });
+    await mkdir(resolve(directory, 'src'), { recursive: true });
+    const profilePath = resolve(directory, 'references', 'product-profile.json');
+    const notesPath = resolve(directory, 'references', 'feature', 'notes.md');
+    const codePath = resolve(directory, 'src', 'feature.ts');
+    await writeFile(profilePath, '{"id":"product_demo","revision":1}\n');
+    await writeFile(notesPath, '# Feature reference\n');
+    await writeFile(codePath, 'export const feature = true;\n');
+    const before = new Map(
+      await Promise.all(
+        [profilePath, notesPath, codePath].map(
+          async (path) =>
+            [path, { bytes: await readFile(path), modified: (await stat(path)).mtimeMs }] as const,
+        ),
+      ),
+    );
+    const attribution = {
+      origin: 'Documented public-action fixture',
+      license: 'Apache-2.0',
+      requiredText: null,
+      usage: 'permitted' as const,
+    };
+    const inputs = [
+      { kind: 'text', text: 'Operator-authored topic reference.' },
+      { kind: 'url', url: 'https://docs.example.com/feature' },
+      { kind: 'file', path: 'references/product-profile.json', copy: false },
+      { kind: 'directory', path: 'references/feature', copy: false },
+      { kind: 'codebase', path: 'src', copy: false },
+    ];
+    let revision = 1;
+    for (const [index, input] of inputs.entries()) {
+      const registered = asData(
+        await call(
+          'source.create',
+          { jobId, source: { input, attribution } },
+          revision,
+          `documented-source-${index}`,
+        ),
+      );
+      revision++;
+      expect(registered.revision).toBe(revision);
+    }
+    expect(asData(await call('source.list', { jobId })).items as unknown[]).toHaveLength(5);
+    for (const [path, original] of before) {
+      expect(await readFile(path)).toEqual(original.bytes);
+      expect((await stat(path)).mtimeMs).toBe(original.modified);
+    }
   });
 
   it('validates, persists, reloads and rejects stale or self-authorizing planning submissions', async () => {

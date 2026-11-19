@@ -38,6 +38,18 @@ export const sourceRegistrationSchema = sourceManifestSchema
   .pick({ input: true, attribution: true, sourceRevision: true })
   .partial({ sourceRevision: true });
 
+export const assetProvenanceDeclarationSchema = z.strictObject({
+  ...recordShape,
+  jobId: idSchema,
+  artifactId: idSchema,
+  sourceId: idSchema.nullable(),
+  origin: z.string().min(1).max(4096),
+  license: z.string().max(500).nullable(),
+  requiredText: z.string().max(2000).nullable(),
+  usage: z.enum(['permitted', 'unknown', 'restricted']),
+  provider: z.strictObject({ id: idSchema, version: z.string().min(1).max(100) }).nullable(),
+});
+
 export const evidenceLocatorSchema = z
   .discriminatedUnion('kind', [
     z.strictObject({ kind: z.literal('whole') }),
@@ -86,5 +98,6 @@ export const researchReportSchema = z.strictObject({
 export type InputReference = z.infer<typeof inputReferenceSchema>;
 export type SourceManifest = z.infer<typeof sourceManifestSchema>;
 export type SourceRegistration = z.infer<typeof sourceRegistrationSchema>;
+export type AssetProvenanceDeclaration = z.infer<typeof assetProvenanceDeclarationSchema>;
 export type EvidenceRecord = z.infer<typeof evidenceRecordSchema>;
 export type ResearchReport = z.infer<typeof researchReportSchema>;

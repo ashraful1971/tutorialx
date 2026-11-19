@@ -1,6 +1,6 @@
 import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -130,6 +130,52 @@ it('reads text, Markdown and code as bounded untrusted data with source hashes a
       expect(sourceReadReportSchema.parse(report)).toEqual(report);
     }
     expect(reader.descriptor.execution.sideEffect).toBe('pure');
+  }));
+
+it('retrieves relevant codebase files within entry/file/byte scopes and detects bounded refreshes', async () =>
+  fixture(async (root, options) => {
+    await mkdir(join(root, 'feature'), { recursive: true });
+    await mkdir(join(root, 'ignored'), { recursive: true });
+    await Promise.all(
+      Array.from({ length: 120 }, (_, index) =>
+        writeFile(join(root, `noise-${String(index).padStart(3, '0')}.ts`), 'unrelated fixture\n'),
+      ),
+    );
+    const relevant = join(root, 'feature', 'tutorialx-relevant.ts');
+    await writeFile(relevant, 'export const boundedRetrieval = "supported";\n');
+    await writeFile(join(root, 'ignored', 'tutorialx-secret.ts'), 'SECRET_SHOULD_NOT_APPEAR\n');
+    await writeFile(join(root, '.env'), 'TOKEN=never-read\n');
+
+    const reader = await createLocalResearchReader({ ...options, maxOutputBytes: 180 });
+    const input: InputReference = { kind: 'codebase', path: root, copy: false };
+    const collectionRequest = {
+      ...request(input, root, 220),
+      query: 'tutorialx bounded retrieval',
+      exclusions: ['ignored'],
+      maxFiles: 2,
+    };
+    const first = await reader.inspect(collectionRequest, context);
+    expect(first.result.source.status).toBe('available');
+    expect(first.bytesRead).toBeLessThanOrEqual(220);
+    expect(first.result.extracts.length).toBeLessThanOrEqual(2);
+    expect(first.result.extracts[0]?.locator).toEqual({
+      kind: 'selector',
+      selector: 'feature/tutorialx-relevant.ts',
+    });
+    expect(first.result.extracts[0]?.text).toContain('boundedRetrieval');
+    expect(JSON.stringify(first)).not.toContain('SECRET_SHOULD_NOT_APPEAR');
+    expect(JSON.stringify(first)).not.toContain('never-read');
+    expect(first.result.truncated).toBe(true);
+    expect(first.result.source.contentHash).toMatch(/^[a-f0-9]{64}$/);
+
+    await writeFile(relevant, 'export const boundedRetrieval = "refreshed";\n');
+    const refreshed = await reader.inspect(
+      { ...collectionRequest, source: first.result.source },
+      context,
+    );
+    expect(refreshed.result.source.contentHash).not.toBe(first.result.source.contentHash);
+    expect(refreshed.limitations.join(' ')).toContain('prior bounded fingerprint');
+    expect(refreshed.result.extracts[0]?.text).toContain('refreshed');
   }));
 
 it('extracts actual DOCX XML with namespaces, entities and paragraph locators without touching linked parts', async () =>
@@ -290,6 +336,9 @@ it('reads static HTML URL evidence with exact origins, bounded bodies, redirect 
       if (req.url === '/redirect') {
         res.writeHead(302, { location: 'http://127.0.0.1:1/forbidden' });
         res.end();
+      } else if (req.url === '/restricted') {
+        res.writeHead(403, { 'content-type': 'text/plain' });
+        res.end('private reference');
       } else if (req.url === '/large') {
         res.writeHead(200, { 'content-type': 'text/html', 'content-length': '5000' });
         res.end('x'.repeat(5000));
@@ -346,6 +395,14 @@ it('reads static HTML URL evidence with exact origins, bounded bodies, redirect 
         allowedOrigins: [origin],
       });
       expect((await untrusted.inspect(req, context)).result.source.reason).toContain('Private');
+      const restrictedInput: InputReference = { kind: 'url', url: origin + '/restricted' };
+      const restricted = await reader.inspect(
+        { ...request(restrictedInput, root), allowedOrigins: [origin] },
+        context,
+      );
+      expect(restricted.result.source.status).toBe('inaccessible');
+      expect(restricted.result.source.reason).toContain('HTTP 403');
+      expect(restricted.result.extracts).toHaveLength(0);
     } finally {
       await new Promise<void>((resolve, reject) =>
         server.close((error) => (error ? reject(error) : resolve())),

@@ -13,6 +13,7 @@ export * from './planning/validation.js';
 export * from './providers/requirements.js';
 export * from './providers/selection.js';
 export * from './providers/wiring.js';
+export * from './research/assets.js';
 export * from './research/evidence.js';
 export * from './research/task-pack.js';
 export * from './skills/installation.js';

@@ -50,11 +50,11 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 ## 6. M2: Evidence-backed ingestion and research
 
 - [x] 6.1 Implement bounded readers for text/Markdown, HTML URLs, PDF/DOCX extraction, code files, and supplied image/audio/video metadata with declared format capabilities; verify each supported fixture yields provenance and unsupported/unreadable sources yield explicit limitations.
-- [ ] 6.2 Implement scoped retrieval, exclusion/size limits, source refresh/fingerprints, and local-only processing restrictions; verify large repositories return bounded relevant extracts and hosted requests are denied under local-only policy.
-- [ ] 6.3 Implement source/evidence records distinguishing claims, inference, and observed app steps; verify conflicting docs and UI observations block an unsupported tutorial claim while an asset-only topic can proceed with sufficient evidence.
-- [ ] 6.4 Implement research task packs and validated external-agent submissions, with source content treated as data; verify malicious reference instructions cannot change job limits, install a provider, or retrieve excluded credentials.
-- [ ] 6.5 Implement asset provenance/attribution declarations and missing-access handling; verify a restricted link is reported honestly and an attributed soundtrack remains traceable to delivery requirements.
-- [ ] 6.6 Document how to supply topics, links, files, folders, codebases, product profiles, and references; verify examples register materials through the public actions without moving originals.
+- [x] 6.2 Implement scoped retrieval, exclusion/size limits, source refresh/fingerprints, and local-only processing restrictions; verify large repositories return bounded relevant extracts and hosted requests are denied under local-only policy.
+- [x] 6.3 Implement source/evidence records distinguishing claims, inference, and observed app steps; verify conflicting docs and UI observations block an unsupported tutorial claim while an asset-only topic can proceed with sufficient evidence.
+- [x] 6.4 Implement research task packs and validated external-agent submissions, with source content treated as data; verify malicious reference instructions cannot change job limits, install a provider, or retrieve excluded credentials.
+- [x] 6.5 Implement asset provenance/attribution declarations and missing-access handling; verify a restricted link is reported honestly and an attributed soundtrack remains traceable to delivery requirements.
+- [x] 6.6 Document how to supply topics, links, files, folders, codebases, product profiles, and references; verify examples register materials through the public actions without moving originals.
 
 ## 7. M2: Briefs, scripts, storyboards, and approval policy
 

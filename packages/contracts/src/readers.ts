@@ -32,11 +32,19 @@ export const sourceReadReportSchema = z.strictObject({
 export type ReaderFormatCapability = z.infer<typeof readerFormatCapabilitySchema>;
 export type SourceMediaMetadata = z.infer<typeof sourceMediaMetadataSchema>;
 export type SourceReadReport = z.infer<typeof sourceReadReportSchema>;
+export type SourceInspectionRequest = Parameters<ResearchReader['read']>[0] & {
+  /** Terms used to rank bounded directory/codebase extracts. Source content remains untrusted data. */
+  query?: string;
+  /** Additional request-level exclusions. These can only narrow the configured reader scope. */
+  exclusions?: readonly string[];
+  /** Maximum number of files returned from a directory/codebase inspection. */
+  maxFiles?: number;
+};
 /** Additive richer inspection; existing ResearchReader.read still returns unmodified ReaderResult v1. */
 export interface InspectableResearchReader extends ResearchReader {
   formats(): readonly ReaderFormatCapability[];
   inspect(
-    request: Parameters<ResearchReader['read']>[0],
+    request: SourceInspectionRequest,
     context: Parameters<ResearchReader['read']>[1],
   ): Promise<SourceReadReport>;
 }

@@ -52,6 +52,8 @@ The resolver never refreshes an existing job or mutates its inputs. Store the re
 
 ## Register inputs
 
+See [supplying research inputs](research-inputs.md) for public CLI/action examples covering topics, links, individual files, supplied media, folders, codebases, product profiles, and reusable references.
+
 `registerWorkspaceSource` from core validates an input/attribution request, assigns source identity/time, and calls a `SourceRegistrar`. `createLocalSourceRegistrar` from adapters receives the trusted workspace, project/job directories, job ID, and settings digest. It registers inline text, URL references, files, media files, directories, and codebases without moving or modifying originals.
 
 File/directory references must remain inside configured `sourceRoots`, including after realpath resolution. Excluded names, private state/content, sibling-prefix escapes, and symlink escapes are denied. Directory trees skip excluded entries; a directly requested excluded source is refused. Exclusions support `*`, `?`, and `**`; names without a slash match path components, while slash patterns are relative to the project or selected source root. Default examples exclude `.env`/`.env.*`, `.git`, dependencies, and generated TutorialX directories. Add all project-specific credential/session/private directories to workspace exclusions before registering a broad tree.

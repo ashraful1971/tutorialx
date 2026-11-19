@@ -1,20 +1,22 @@
 import { createHash } from 'node:crypto';
+import { opendir, stat } from 'node:fs/promises';
 import { createRequire } from 'node:module';
-import { extname, resolve } from 'node:path';
+import { extname, join, relative, resolve } from 'node:path';
 import {
   canonicalJson,
+  type InputReference,
   type InspectableResearchReader,
   inputReferenceSchema,
   type OperationContext,
   type ReaderFormatCapability,
-  type ResearchReader,
   readerResultSchema,
+  type SourceInspectionRequest,
   type SourceReadReport,
   sourceManifestSchema,
   sourceReadReportSchema,
   timestampSchema,
 } from '@tutorialx/contracts';
-import { createSourceScope, readScopedFile } from '../workspace/source-scope.js';
+import { createSourceScope, excludedPath, readScopedFile } from '../workspace/source-scope.js';
 import { imageMetadata, probeMetadata, waveMetadata } from './media.js';
 import { ReaderAccessError, readBoundedUrl } from './network.js';
 import { documentText, probeBytes, probeExecutable } from './runtime.js';
@@ -83,6 +85,34 @@ const defaults = [
   '*.pfx',
 ];
 const hash = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex');
+const retrievalExtensions = new Set([...textExtensions, '.html', '.htm']);
+
+interface RetrievalCandidate {
+  absolutePath: string;
+  relativePath: string;
+  size: number;
+  modifiedMs: number;
+  pathScore: number;
+}
+
+function searchTerms(query: string | undefined): string[] {
+  return [...new Set((query ?? '').toLocaleLowerCase().match(/[\p{L}\p{N}_-]+/gu) ?? [])].slice(
+    0,
+    20,
+  );
+}
+
+function relevance(text: string, terms: readonly string[]): number {
+  if (!terms.length) return 0;
+  const normalized = text.toLocaleLowerCase();
+  return terms.reduce((score, term) => score + (normalized.includes(term) ? 1 : 0), 0);
+}
+
+function isCollectionInput(
+  input: InputReference,
+): input is InputReference & { kind: 'directory' | 'codebase' } {
+  return input.kind === 'directory' || input.kind === 'codebase';
+}
 export interface LocalResearchReaderOptions {
   projectDirectory: string;
   /** Trusted application ceilings. Each request may further restrict roots/origins/bytes. */
@@ -196,8 +226,187 @@ export async function createLocalResearchReader(
     },
   ];
   const now = options.now ?? (() => new Date().toISOString());
+  async function inspectCollection(
+    request: SourceInspectionRequest,
+    source: SourceReadReport['result']['source'],
+    input: InputReference & { kind: 'directory' | 'codebase' },
+    signal: AbortSignal,
+    maxBytes: number,
+  ): Promise<SourceReadReport> {
+    const format = input.kind;
+    const limitations: string[] = [];
+    const result: SourceReadReport = {
+      result: { source, extracts: [], artifacts: [], truncated: false },
+      format,
+      bytesRead: 0,
+      media: null,
+      limitations,
+    };
+    const maxFiles = request.maxFiles ?? 20;
+    if (!Number.isSafeInteger(maxFiles) || maxFiles < 1 || maxFiles > 100)
+      throw new ReaderAccessError('Directory retrieval maxFiles must be between 1 and 100.');
+    if ((request.query?.length ?? 0) > 1000 || (request.exclusions?.length ?? 0) > 100)
+      throw new ReaderAccessError(
+        'Directory retrieval query or exclusion scope exceeds its limit.',
+      );
+
+    const exclusions = [...defaults, ...(options.exclusions ?? []), ...(request.exclusions ?? [])];
+    const privateRoots = options.privateRoots ?? [resolve(project, '.tutorialx')];
+    const ceiling = createSourceScope(project, options.allowedRoots, exclusions, privateRoots);
+    const scope = createSourceScope(project, request.allowedRoots, exclusions, privateRoots);
+    const authorize = async (path: string) => {
+      await ceiling.authorize(path);
+      return scope.authorize(path);
+    };
+    const root = await authorize(input.path);
+    const rootStat = await stat(root);
+    if (!rootStat.isDirectory())
+      throw new ReaderAccessError('Directory/codebase source must resolve to a directory.');
+
+    const terms = searchTerms(request.query);
+    const candidates: RetrievalCandidate[] = [];
+    const stack = [root];
+    let visited = 0;
+    let excluded = 0;
+    let unsupported = 0;
+    const maximumEntries = 10_000;
+    while (stack.length) {
+      signal.throwIfAborted();
+      const directory = stack.pop()!;
+      const entries = [];
+      for await (const entry of await opendir(directory)) entries.push(entry);
+      entries.sort((left, right) => left.name.localeCompare(right.name));
+      for (const entry of entries) {
+        signal.throwIfAborted();
+        visited++;
+        if (visited > maximumEntries) {
+          result.result.truncated = true;
+          stack.length = 0;
+          break;
+        }
+        const path = join(directory, entry.name);
+        const fromProject = relative(project, path);
+        const fromRoot = relative(root, path).replaceAll('\\', '/');
+        if (excludedPath(fromProject, exclusions) || excludedPath(fromRoot, exclusions)) {
+          excluded++;
+          continue;
+        }
+        if (entry.isSymbolicLink()) {
+          excluded++;
+          continue;
+        }
+        if (entry.isDirectory()) {
+          await authorize(path);
+          stack.push(path);
+          continue;
+        }
+        if (!entry.isFile() || !retrievalExtensions.has(extname(entry.name).toLowerCase())) {
+          unsupported++;
+          continue;
+        }
+        const checked = await authorize(path);
+        const metadata = await stat(checked);
+        candidates.push({
+          absolutePath: checked,
+          relativePath: fromRoot,
+          size: metadata.size,
+          modifiedMs: Math.trunc(metadata.mtimeMs),
+          pathScore: relevance(fromRoot, terms),
+        });
+      }
+    }
+
+    candidates.sort(
+      (left, right) =>
+        right.pathScore - left.pathScore || left.relativePath.localeCompare(right.relativePath),
+    );
+    const fingerprint = createHash('sha256');
+    for (const candidate of [...candidates].sort((left, right) =>
+      left.relativePath.localeCompare(right.relativePath),
+    ))
+      fingerprint.update(
+        `${candidate.relativePath}\0${candidate.size}\0${candidate.modifiedMs}\n`,
+        'utf8',
+      );
+    const digest = fingerprint.digest('hex');
+    if (source.contentHash !== null && source.contentHash !== digest)
+      limitations.push(
+        'Source collection differs from its prior bounded fingerprint; review refreshed extracts before reusing evidence.',
+      );
+    source.contentHash = digest;
+
+    const ranked: Array<RetrievalCandidate & { bytes: Buffer; score: number }> = [];
+    let remaining = maxBytes;
+    for (const candidate of candidates) {
+      if (remaining <= 0) {
+        result.result.truncated = true;
+        break;
+      }
+      if (candidate.size > remaining) {
+        result.result.truncated = true;
+        continue;
+      }
+      const bytes = await readScopedFile(candidate.absolutePath, remaining, authorize);
+      result.bytesRead += bytes.length;
+      remaining -= bytes.length;
+      let text: string;
+      try {
+        text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+      } catch {
+        unsupported++;
+        continue;
+      }
+      if (text.includes('\0')) {
+        unsupported++;
+        continue;
+      }
+      ranked.push({
+        ...candidate,
+        bytes,
+        score: candidate.pathScore * 100 + relevance(text, terms),
+      });
+    }
+    ranked.sort(
+      (left, right) =>
+        right.score - left.score || left.relativePath.localeCompare(right.relativePath),
+    );
+
+    let outputBytes = 0;
+    for (const candidate of ranked.slice(0, maxFiles)) {
+      const available = Math.max(0, limits.output - outputBytes);
+      if (!available) {
+        result.result.truncated = true;
+        break;
+      }
+      const bounded = new TextDecoder('utf-8').decode(candidate.bytes.subarray(0, available), {
+        stream: true,
+      });
+      if (candidate.bytes.length > available) result.result.truncated = true;
+      if (!bounded) continue;
+      result.result.extracts.push({
+        locator: { kind: 'selector', selector: candidate.relativePath },
+        text: bounded.slice(0, 100_000),
+      });
+      outputBytes += Buffer.byteLength(bounded);
+    }
+    if (ranked.length > maxFiles) result.result.truncated = true;
+    limitations.push(
+      `Scoped retrieval inspected ${Math.min(visited, maximumEntries)} entries, considered ${candidates.length} supported files, returned ${result.result.extracts.length}, excluded ${excluded}, and skipped ${unsupported} unsupported files.`,
+    );
+    if (terms.length)
+      limitations.push(`Results were ranked against ${terms.length} bounded query terms.`);
+    if (result.result.truncated)
+      limitations.push(
+        'Collection retrieval was truncated by file, byte, entry, or output limits.',
+      );
+    if (!result.result.extracts.length)
+      limitations.push('No readable files matched the authorized collection scope and limits.');
+    source.status = 'available';
+    source.reason = limitations.join(' ').slice(0, 2000);
+    return sourceReadReportSchema.parse(result);
+  }
   async function inspect(
-    request: Parameters<ResearchReader['read']>[0],
+    request: SourceInspectionRequest,
     context: OperationContext,
   ): Promise<SourceReadReport> {
     const original = sourceManifestSchema.parse(request.source);
@@ -240,13 +449,8 @@ export async function createLocalResearchReader(
       let name = '';
       let contentType = '';
       const maxBytes = Math.min(request.maxBytes, limits.input);
-      if (input.kind === 'directory' || input.kind === 'codebase') {
-        source.status = 'unsupported';
-        source.reason =
-          'Directory/codebase sources require scoped bounded retrieval; select a relevant file for this reader.';
-        limitations.push(source.reason);
-        return sourceReadReportSchema.parse(result);
-      }
+      if (isCollectionInput(input))
+        return await inspectCollection(request, source, input, signal, maxBytes);
       if (input.kind === 'text') {
         bytes = Buffer.from(input.text);
         format = 'text';
