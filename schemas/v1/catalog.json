@@ -4468,6 +4468,62 @@
               },
               "verified": {
                 "type": "boolean"
+              },
+              "presentation": {
+                "type": "object",
+                "properties": {
+                  "interaction": {
+                    "type": "string",
+                    "enum": [
+                      "navigate",
+                      "click",
+                      "fill",
+                      "scroll",
+                      "observe"
+                    ]
+                  },
+                  "cursor": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          },
+                          "y": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "click": {
+                    "type": "boolean"
+                  },
+                  "checkpointArtifactId": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_-]{0,127}$"
+                  }
+                },
+                "required": [
+                  "interaction",
+                  "cursor",
+                  "click",
+                  "checkpointArtifactId"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [

@@ -32,6 +32,19 @@ export const captureResultSchema = z.strictObject({
         range: timeRangeSchema,
         focus: focusRegionSchema.nullable(),
         verified: z.boolean(),
+        presentation: z
+          .strictObject({
+            interaction: z.enum(['navigate', 'click', 'fill', 'scroll', 'observe']),
+            cursor: z
+              .strictObject({
+                x: z.number().min(0).max(1),
+                y: z.number().min(0).max(1),
+              })
+              .nullable(),
+            click: z.boolean(),
+            checkpointArtifactId: idSchema,
+          })
+          .optional(),
       }),
     )
     .max(1000),

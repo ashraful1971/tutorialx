@@ -69,10 +69,10 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 
 - [x] 8.1 Build a small licensed demo app and a WordPress test-plugin fixture with repeatable setup/reset; verify the public feature flow succeeds independently before using it as a recording fixture.
 - [x] 8.2 Implement Playwright preflight, private session references, isolated contexts, explicit viewport/recording sizes, and finalized video probing; verify expired auth and unfinalized/missing recordings cannot succeed.
-- [ ] 8.3 Implement approved action execution, robust locators, expected-result assertions, screenshot evidence, action timestamps, and focus coordinates; verify a failed save is reported instead of narrated as success.
-- [ ] 8.4 Implement deliberate dwell, readable typing/scrolling, cursor/click presentation metadata, and scene checkpoints; verify cursor markers match actual actions and essential steps remain readable in landscape and vertical fixture previews.
-- [ ] 8.5 Implement fixture resource locking, state reconciliation, scoped demo mutations, and masking regions; verify parallel shared-state recordings cannot conflict and retry after a mutation does not create uncontrolled duplicates.
-- [ ] 8.6 Document product demo setup, authentication renewal, permitted actions, and capture limitations; verify the WordPress fixture produces a real finalized recording and evidence manifest through public actions.
+- [x] 8.3 Implement approved action execution, robust locators, expected-result assertions, screenshot evidence, action timestamps, and focus coordinates; verify a failed save is reported instead of narrated as success.
+- [x] 8.4 Implement deliberate dwell, readable typing/scrolling, cursor/click presentation metadata, and scene checkpoints; verify cursor markers match actual actions and essential steps remain readable in landscape and vertical fixture previews.
+- [x] 8.5 Implement fixture resource locking, state reconciliation, scoped demo mutations, and masking regions; verify parallel shared-state recordings cannot conflict and retry after a mutation does not create uncontrolled duplicates.
+- [x] 8.6 Document product demo setup, authentication renewal, permitted actions, and capture limitations; verify the WordPress fixture produces a real finalized recording and evidence manifest through public actions.
 
 ## 9. M2: Narration, alignment, and measured timelines
 

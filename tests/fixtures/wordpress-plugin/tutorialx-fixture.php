@@ -22,6 +22,9 @@ function tutorialx_fixture_normalize(array $input, ?array $current = null): arra
     if ($title === '' || strlen($title) > 80 || !preg_match('/^#[a-f0-9]{6}$/', $accent)) {
         throw new InvalidArgumentException('Invalid TutorialX fixture settings.');
     }
+    if (($current['site_title'] ?? null) === $title && ($current['accent'] ?? null) === $accent) {
+        return ['site_title' => $title, 'accent' => $accent, 'revision' => (int)$current['revision']];
+    }
     return ['site_title' => $title, 'accent' => $accent, 'revision' => ((int)$current['revision']) + 1];
 }
 

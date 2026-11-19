@@ -62,7 +62,10 @@ const server = createServer(async (request, response) => {
 <form method="post" action="/admin/settings">
 <label>Site title <input data-testid="site-title" name="siteTitle" value="${escape(state.siteTitle)}" /></label>
 <label>Accent color <input data-testid="accent" name="accent" value="${escape(state.accent)}" /></label>
-<button type="submit">Save changes</button></form></main></body></html>`);
+<button type="submit">Save changes</button></form>
+<div aria-hidden="true" style="height: 900px"></div>
+<section data-testid="advanced"><h2>Advanced preview</h2><p>Fixture checkpoint.</p></section>
+</main></body></html>`);
       return;
     }
     if (request.method === 'POST' && url.pathname === '/admin/settings') {
@@ -74,7 +77,9 @@ const server = createServer(async (request, response) => {
         return;
       }
       const current = await load();
-      await save({ siteTitle, accent: accent.toLowerCase(), revision: current.revision + 1 });
+      const normalizedAccent = accent.toLowerCase();
+      if (current.siteTitle !== siteTitle || current.accent !== normalizedAccent)
+        await save({ siteTitle, accent: normalizedAccent, revision: current.revision + 1 });
       response.writeHead(303, { location: '/admin/settings?saved=1' });
       response.end();
       return;

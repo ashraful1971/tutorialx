@@ -94,3 +94,17 @@ describe.skipIf(!php)('WordPress plugin fixture', () => {
     ).toContain('SPDX-License-Identifier: Apache-2.0');
   });
 });
+
+it('documents setup, session renewal, permitted actions, masking, and limitations', async () => {
+  const guide = await readFile('docs/browser-capture.md', 'utf8');
+  for (const expected of [
+    '## Product demo setup',
+    '## Authentication and renewal',
+    '## Permitted actions and sensitive regions',
+    '## Capture outputs and limitations',
+    'CAPTURE_AUTH_EXPIRED',
+    'ResourceCoordinator',
+    'maskRegions',
+  ])
+    expect(guide).toContain(expected);
+});
