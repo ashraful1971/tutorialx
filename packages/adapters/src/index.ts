@@ -2,6 +2,7 @@ export type { ContractVersion } from '@tutorialx/contracts';
 export * from './alignment/whisperx.js';
 export * from './capture/playwright.js';
 export * from './persistence/sqlite/index.js';
+export * from './render/audio-mixer.js';
 export * from './render/hyperframes.js';
 export * from './research/local-reader.js';
 export * from './skills/local-installation.js';
