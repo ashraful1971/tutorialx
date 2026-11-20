@@ -4,6 +4,8 @@ export * from './persistence/sqlite/index.js';
 export * from './research/local-reader.js';
 export * from './skills/local-installation.js';
 export * from './speech/google.js';
+export * from './speech/supplied.js';
+export * from './speech/timing.js';
 export * from './storage/local/artifact-staging.js';
 export * from './storage/local/delivery-pointer.js';
 export * from './system/fingerprint.js';

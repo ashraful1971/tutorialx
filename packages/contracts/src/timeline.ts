@@ -122,4 +122,5 @@ export type Timeline = z.infer<typeof timelineSchema>;
 export type TimelineClip = z.infer<typeof timelineClipSchema>;
 export type CaptionTrack = z.infer<typeof captionTrackSchema>;
 export type CaptionCue = z.infer<typeof captionCueSchema>;
+export type TimedWord = z.infer<typeof timedWordSchema>;
 export type TimeRange = z.infer<typeof timeRangeSchema>;
