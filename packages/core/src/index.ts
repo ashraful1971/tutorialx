@@ -11,6 +11,7 @@ export * from './planning/brief.js';
 export * from './planning/preflight.js';
 export * from './planning/script.js';
 export * from './planning/validation.js';
+export * from './production/captions.js';
 export * from './production/narration.js';
 export * from './production/timing.js';
 export * from './providers/requirements.js';
