@@ -4,6 +4,7 @@ export * from './capture/playwright.js';
 export * from './persistence/sqlite/index.js';
 export * from './render/audio-mixer.js';
 export * from './render/hyperframes.js';
+export * from './render/variant-exports.js';
 export * from './research/local-reader.js';
 export * from './skills/local-installation.js';
 export * from './speech/google.js';

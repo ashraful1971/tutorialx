@@ -15,3 +15,9 @@ boundaries round up to the nearest millisecond, preventing sidecar conversion fr
 content. WebVTT includes the BCP 47 language metadata. `attachCaptionTrack` requires matching job,
 plan revision, and duration, so a retimed revision cannot silently attach to an obsolete render
 timeline.
+
+`createVariantExporter` enforces that same accepted timeline binding for every output mode. `none`
+and `embedded` produce no sidecars; `sidecar` leaves the accepted video unburned; `both` burns the
+accepted track and writes only the selected SRT/VTT formats. Temporary burn-in subtitles are
+removed. Thumbnail extraction runs only for variants whose `thumbnail` setting is true, and every
+returned file records the accepted timeline identity.

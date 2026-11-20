@@ -89,7 +89,7 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 - [x] 10.2 Implement a pinned HyperFrames adapter with preflight, reproducible asset/font staging, inspectable diagnostics, resource limits, and atomic output acceptance; verify a real CLI/library render passes media probing and missing fonts/assets fail explicitly.
 - [x] 10.3 Implement branded tutorial/explainer/reel templates and variant-specific framing, safe regions, crop/zoom mapping, and caption layout; verify required controls/text remain visible in landscape, vertical, and square fixtures.
 - [x] 10.4 Implement audio mixing/ducking and explicit no-music/no-effects behavior with FFmpeg utilities where needed; verify voice/background levels and a narration-only render contains no added soundtrack.
-- [ ] 10.5 Implement embedded, sidecar, both, and no-caption exports plus requested thumbnail generation; verify all four caption modes use the accepted final timeline and produce only their requested files.
+- [x] 10.5 Implement embedded, sidecar, both, and no-caption exports plus requested thumbnail generation; verify all four caption modes use the accepted final timeline and produce only their requested files.
 - [ ] 10.6 Implement the supplied-asset provider and optional generated-asset request contract with provenance, explicit cost authorization, and capability failure behavior; verify asset-only production requires no browser or generative-media service.
 - [ ] 10.7 Document template/recipe extension, custom-renderer dependencies, and selected renderer setup; verify common examples render through public actions without manual edits to generated source.
 
