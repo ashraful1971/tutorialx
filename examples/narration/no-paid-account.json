@@ -1,0 +1,10 @@
+{
+  "sceneId": "intro",
+  "text": "Welcome to TutorialX",
+  "language": "en-US",
+  "timings": [
+    { "text": "Welcome", "start": 0, "end": 0.35, "unit": "seconds" },
+    { "text": "to", "start": 0.35, "end": 0.5, "unit": "seconds" },
+    { "text": "TutorialX", "start": 0.5, "end": 0.95, "unit": "seconds" }
+  ]
+}

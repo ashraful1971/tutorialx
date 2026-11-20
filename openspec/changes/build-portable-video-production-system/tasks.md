@@ -81,7 +81,7 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 - [x] 9.3 Implement the optional locked WhisperX runtime bridge, language/model capability reporting, final-audio transcription/alignment, and approved-text comparison; verify CPU-mode fixtures, omitted speech, product terms, numbers, and unalignable words produce accurate results or explicit findings.
 - [x] 9.4 Implement measured scene timing, narration/action anchors, allowed holds/cutaways, duration reconciliation, and rational-frame conversion; verify known alignment fixtures stay within the quality profile's tolerance without truncating narration or speeding essential actions beyond policy.
 - [x] 9.5 Implement shared final caption tracks, SRT/VTT serialization, readable line breaking, and language metadata; verify Unicode text, overlapping/invalid cues, and timeline revisions through meaningful caption fixtures.
-- [ ] 9.6 Document voice selection/audition, supplied-audio use, local alignment installation, and timing limitations; verify the documented no-paid-account example uses supplied narration and still produces valid aligned captions.
+- [x] 9.6 Document voice selection/audition, supplied-audio use, local alignment installation, and timing limitations; verify the documented no-paid-account example uses supplied narration and still produces valid aligned captions.
 
 ## 10. M2: HyperFrames composition and output variants
 
