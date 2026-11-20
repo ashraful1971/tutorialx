@@ -4,9 +4,16 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SKILL_FILES } from './skill-files.mjs';
 
+const TEMPLATE_FILES = [
+  'templates/explainer-branded.json',
+  'templates/reel-branded.json',
+  'templates/tutorial-branded.json',
+];
+
 /** @param {string} path */
 export function isAllowedPackagePath(path) {
   if (['package.json', 'README.md', 'LICENSE'].includes(path)) return true;
+  if (TEMPLATE_FILES.includes(path)) return true;
   if (SKILL_FILES.some((name) => path === `dist/skills/tutorialx/${name}`)) return true;
   if (!path.startsWith('dist/')) return false;
   if (path.split('/').some((part) => part.startsWith('.') || part === '..')) return false;

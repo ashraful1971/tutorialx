@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "reel_branded",
+  "version": "1.0.0",
+  "family": "reel",
+  "brandSlots": ["name", "primaryColor", "logo"],
+  "fontFamilies": ["Inter"],
+  "safeInsets": {
+    "landscape": [0.05, 0.06, 0.05, 0.1],
+    "vertical": [0.06, 0.08, 0.06, 0.16],
+    "square": [0.06, 0.07, 0.06, 0.12]
+  },
+  "titleHeight": 0.11
+}

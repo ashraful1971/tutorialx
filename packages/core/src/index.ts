@@ -14,6 +14,7 @@ export * from './planning/validation.js';
 export * from './production/captions.js';
 export * from './production/composition.js';
 export * from './production/narration.js';
+export * from './production/templates.js';
 export * from './production/timing.js';
 export * from './providers/requirements.js';
 export * from './providers/selection.js';
