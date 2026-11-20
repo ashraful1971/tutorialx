@@ -28,6 +28,7 @@ import {
   workspaceInitInputSchema,
 } from './cli-actions.js';
 import { CONTRACT_VERSION } from './common.js';
+import { compositionGraphSchema, trustedTemplateSchema } from './composition.js';
 import { deliveryManifestSchema } from './delivery.js';
 import { doctorInputSchema, doctorReportSchema } from './doctor.js';
 import {
@@ -134,6 +135,7 @@ export const PUBLIC_SCHEMAS = {
   AssetResult: assetResultSchema,
   BatchManifest: batchManifestSchema,
   CaptionTrack: captionTrackSchema,
+  CompositionGraph: compositionGraphSchema,
   CaptureResult: captureResultSchema,
   CostEstimate: costEstimateSchema,
   CurrentDeliveryPointer: currentDeliveryPointerSchema,
@@ -186,6 +188,7 @@ export const PUBLIC_SCHEMAS = {
   StagedArtifact: stagedArtifactSchema,
   StageDefinition: stageDefinitionSchema,
   Timeline: timelineSchema,
+  TrustedTemplate: trustedTemplateSchema,
   VoiceResult: voiceResultSchema,
   WorkspaceConfig: workspaceConfigSchema,
   WorkflowGraph: workflowGraphSchema,

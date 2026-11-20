@@ -6,6 +6,7 @@ export * from './batch.js';
 export * from './catalog.js';
 export * from './cli-actions.js';
 export * from './common.js';
+export * from './composition.js';
 export * from './delivery.js';
 export * from './doctor.js';
 export * from './execution.js';
