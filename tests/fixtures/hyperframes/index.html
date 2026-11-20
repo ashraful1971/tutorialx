@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #0b1020; }
+      #tutorialx-fixture { position: relative; width: 640px; height: 360px; background: #0b1020; }
+      .clip { position: absolute; inset: 0; display: grid; place-items: center; }
+      h1 { color: #fff; font: 700 48px/1.1 Arial, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <div id="tutorialx-fixture" data-composition-id="tutorialx-fixture" data-width="640" data-height="360">
+      <section id="title" class="clip" data-start="0" data-duration="1" data-track-index="0">
+        <h1>TutorialX</h1>
+      </section>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const timeline = gsap.timeline({ paused: true });
+      timeline.from("#title h1", { opacity: 0, y: 20, duration: 0.25 });
+      timeline.to("#title h1", { opacity: 1, duration: 0.75 });
+      window.__timelines["tutorialx-fixture"] = timeline;
+    </script>
+  </body>
+</html>
