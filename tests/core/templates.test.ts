@@ -2,6 +2,7 @@ import {
   brandedTemplates,
   mapFocusToCrop,
   resolveBrandedLayout,
+  templateForRecipe,
   validateBrandedLayout,
 } from '@tutorialx/core';
 import { describe, expect, it } from 'vitest';
@@ -65,6 +66,19 @@ it('rejects layouts that place required material under platform controls', () =>
       titleRegion: { ...layout.titleRegion, y: layout.platformControlExclusion.y },
     }),
   ).toThrow('TEMPLATE_REQUIRED_CONTENT_OUTSIDE_SAFE_REGION');
+});
+
+it.each([
+  ['tutorial', 'tutorial_branded'],
+  ['explainer', 'explainer_branded'],
+  ['asset-video', 'explainer_branded'],
+  ['reel', 'reel_branded'],
+  ['mixed', 'tutorial_branded'],
+] as const)('selects the maintained common template for the %s recipe', (recipe, expected) => {
+  const selected = templateForRecipe(recipe);
+  expect(selected.template.id).toBe(expected);
+  selected.template.id = 'detached_copy';
+  expect(templateForRecipe(recipe).template.id).toBe(expected);
 });
 
 import { createHash } from 'node:crypto';

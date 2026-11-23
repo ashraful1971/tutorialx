@@ -1,3 +1,4 @@
+import { HYPERFRAMES_PROVIDER_VERSION } from '@tutorialx/adapters';
 import { settingsSchema, type VideoSettings } from '@tutorialx/contracts';
 
 /** Explicit, silent-video defaults. No narration or paid integration is implied. */
@@ -42,7 +43,12 @@ export function builtInSettings(): VideoSettings {
       outroTemplate: null,
     },
     providers: {
-      renderer: { id: 'hyperframes', version: '1', config: {}, credentialRef: null },
+      renderer: {
+        id: 'hyperframes',
+        version: HYPERFRAMES_PROVIDER_VERSION,
+        config: { fps: 30, quality: 'standard', maxOutputBytes: 2_147_483_648 },
+        credentialRef: null,
+      },
       voice: null,
       capture: null,
       alignment: null,

@@ -27,6 +27,7 @@ import {
 } from '@tutorialx/contracts';
 
 export const HYPERFRAMES_VERSION = '0.9.70';
+export const HYPERFRAMES_PROVIDER_VERSION = '1.0.0';
 
 export interface ProcessResult {
   exitCode: number;
@@ -68,8 +69,6 @@ interface Config {
   maxOutputBytes: number;
 }
 
-const providerVersion = '1.0.0';
-
 function parseConfig(value: JsonObject): Config | null {
   if (Object.keys(value).some((key) => !['fps', 'quality', 'maxOutputBytes'].includes(key)))
     return null;
@@ -96,7 +95,7 @@ function descriptor(): ProviderDescriptor & { kind: 'renderer' } {
   return {
     id: 'hyperframes',
     kind: 'renderer',
-    version: providerVersion,
+    version: HYPERFRAMES_PROVIDER_VERSION,
     contractVersion: 1,
     configurationSchema: {
       type: 'object',
@@ -521,7 +520,7 @@ export function createHyperframesRenderer(
               ...request.assets.map((asset) => asset.digest),
               createHash('sha256').update(canonicalJson(request.timeline)).digest('hex'),
             ],
-            provider: { id: 'hyperframes', version: providerVersion },
+            provider: { id: 'hyperframes', version: HYPERFRAMES_PROVIDER_VERSION },
             settingsDigest: options.settingsDigest,
             templateDigest: staged.digest,
           },

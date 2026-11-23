@@ -1,4 +1,4 @@
-import type { TrustedTemplate } from '@tutorialx/contracts';
+import type { TrustedTemplate, VideoSettings } from '@tutorialx/contracts';
 
 export type BrandedTemplateFamily = 'tutorial' | 'explainer' | 'reel';
 export type VariantShape = 'landscape' | 'vertical' | 'square';
@@ -108,6 +108,22 @@ export const brandedTemplates: readonly BrandedTemplateDefinition[] = [
     brandSlots: ['name', 'primaryColor', 'logo'],
   },
 ];
+
+const recipeTemplates: Readonly<Record<VideoSettings['recipe'], BrandedTemplateFamily>> = {
+  tutorial: 'tutorial',
+  explainer: 'explainer',
+  'asset-video': 'explainer',
+  reel: 'reel',
+  mixed: 'tutorial',
+};
+
+/** Selects maintained common templates without generating or editing renderer source. */
+export function templateForRecipe(recipe: VideoSettings['recipe']): BrandedTemplateDefinition {
+  const family = recipeTemplates[recipe];
+  const definition = brandedTemplates.find((entry) => entry.family === family);
+  if (!definition) throw new Error('TEMPLATE_RECIPE_UNSUPPORTED');
+  return structuredClone(definition);
+}
 
 function finitePositive(value: number, code: string) {
   if (!Number.isFinite(value) || value <= 0) throw new Error(code);

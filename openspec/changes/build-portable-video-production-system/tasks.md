@@ -91,7 +91,7 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 - [x] 10.4 Implement audio mixing/ducking and explicit no-music/no-effects behavior with FFmpeg utilities where needed; verify voice/background levels and a narration-only render contains no added soundtrack.
 - [x] 10.5 Implement embedded, sidecar, both, and no-caption exports plus requested thumbnail generation; verify all four caption modes use the accepted final timeline and produce only their requested files.
 - [x] 10.6 Implement the supplied-asset provider and optional generated-asset request contract with provenance, explicit cost authorization, and capability failure behavior; verify asset-only production requires no browser or generative-media service.
-- [ ] 10.7 Document template/recipe extension, custom-renderer dependencies, and selected renderer setup; verify the guidance covers maintained common templates and declares unsupported custom dependencies without requiring manual edits to generated source.
+- [x] 10.7 Document template/recipe extension, custom-renderer dependencies, and selected renderer setup; verify the guidance covers maintained common templates and declares unsupported custom dependencies without requiring manual edits to generated source.
 
 ## 11. M2: Quality, repairs, and complete local delivery
 
