@@ -91,7 +91,7 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 - [x] 10.4 Implement audio mixing/ducking and explicit no-music/no-effects behavior with FFmpeg utilities where needed; verify voice/background levels and a narration-only render contains no added soundtrack.
 - [x] 10.5 Implement embedded, sidecar, both, and no-caption exports plus requested thumbnail generation; verify all four caption modes use the accepted final timeline and produce only their requested files.
 - [x] 10.6 Implement the supplied-asset provider and optional generated-asset request contract with provenance, explicit cost authorization, and capability failure behavior; verify asset-only production requires no browser or generative-media service.
-- [ ] 10.7 Document template/recipe extension, custom-renderer dependencies, and selected renderer setup; verify common examples render through public actions without manual edits to generated source.
+- [ ] 10.7 Document template/recipe extension, custom-renderer dependencies, and selected renderer setup; verify the guidance covers maintained common templates and declares unsupported custom dependencies without requiring manual edits to generated source.
 
 ## 11. M2: Quality, repairs, and complete local delivery
 
@@ -100,7 +100,7 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 - [ ] 11.3 Implement fresh reviewer task submissions and findings for accuracy, demo success, narration fidelity, framing, captions, pacing, and masking; verify a producer's success assertion alone cannot finalize delivery.
 - [ ] 11.4 Implement finding-to-stage repair mapping, bounded repairs, rechecks, and renewed approval for material changes; verify a music-level or caption-layout repair reuses valid capture/research and exhaustion ends in needs-attention.
 - [ ] 11.5 Implement immutable per-variant delivery packages and current-pointer commit with videos, selected subtitles/thumbnails, checksums, attribution, and quality manifests; verify partial/failed packages never replace the last accepted delivery and nothing is published externally by default.
-- [ ] 11.6 Run the M2 integration gate: a real WordPress feature tutorial and an asset-only explainer/reel, both through public actions from materials to approval to checked MP4; document exact dependencies, reviewer evidence, and output inspection results.
+- [ ] 11.6 Run the M2 integration gate: a real WordPress feature tutorial and an asset-only explainer/reel, both through public actions from materials to approval to checked MP4 without manual edits to generated renderer source; document exact dependencies, reviewer evidence, and output inspection results.
 
 ## 12. M3: Persistent local worker and recovery proof
 
