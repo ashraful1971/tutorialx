@@ -3,6 +3,14 @@ import { idSchema, microsecondsSchema, positiveIntegerSchema, recordShape } from
 import { timeRangeSchema } from './timeline.js';
 
 export const reviewModalitySchema = z.enum(['text', 'image', 'audio', 'video']);
+export const technicalQualityThresholdsSchema = z.strictObject({
+  blankMinDurationUs: positiveIntegerSchema,
+  frozenMinDurationUs: positiveIntegerSchema,
+  silentMinDurationUs: positiveIntegerSchema,
+  blackPixelRatio: z.number().positive().max(1),
+  silenceNoiseDb: z.number().min(-100).max(0),
+  freezeNoiseDb: z.number().min(-100).max(0),
+});
 export const qualityProfileSchema = z.strictObject({
   ...recordShape,
   revision: positiveIntegerSchema,
@@ -14,6 +22,8 @@ export const qualityProfileSchema = z.strictObject({
   maxTruePeakDbtp: z.number().min(-60).max(0),
   minTextHeightRatio: z.number().positive().max(1),
   maxRepairs: z.number().int().min(0).max(20),
+  /** Optional for stored v1 profiles; maintained profiles always resolve explicit detector values. */
+  technical: technicalQualityThresholdsSchema.optional(),
 });
 
 export const qualityFindingSchema = z.strictObject({
@@ -73,6 +83,7 @@ export const reviewResultSchema = z
   );
 
 export type QualityProfile = z.infer<typeof qualityProfileSchema>;
+export type TechnicalQualityThresholds = z.infer<typeof technicalQualityThresholdsSchema>;
 export type QualityFinding = z.infer<typeof qualityFindingSchema>;
 export type ReviewResult = z.infer<typeof reviewResultSchema>;
 export type ReviewModality = z.infer<typeof reviewModalitySchema>;

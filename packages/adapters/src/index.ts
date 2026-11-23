@@ -3,6 +3,7 @@ export * from './alignment/whisperx.js';
 export * from './assets/supplied.js';
 export * from './capture/playwright.js';
 export * from './persistence/sqlite/index.js';
+export * from './quality/ffmpeg.js';
 export * from './render/audio-mixer.js';
 export * from './render/hyperframes.js';
 export * from './render/variant-exports.js';
