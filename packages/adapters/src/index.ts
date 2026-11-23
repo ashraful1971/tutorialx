@@ -1,5 +1,6 @@
 export type { ContractVersion } from '@tutorialx/contracts';
 export * from './alignment/whisperx.js';
+export * from './assets/supplied.js';
 export * from './capture/playwright.js';
 export * from './persistence/sqlite/index.js';
 export * from './render/audio-mixer.js';

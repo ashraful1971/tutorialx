@@ -57,6 +57,7 @@ import {
 } from './planning.js';
 import { jobProjectionSchema, planProjectionSchema } from './projections.js';
 import { costEstimateSchema, providerDescriptorSchema } from './providers/descriptor.js';
+import { assetPreparationRequestSchema, generatedAssetRequestSchema } from './providers/media.js';
 import {
   agentTaskResultSchema,
   alignmentResultSchema,
@@ -132,6 +133,7 @@ export const PUBLIC_SCHEMAS = {
   ApprovalRecord: approvalRecordSchema,
   ArtifactManifest: artifactManifestSchema,
   ArtifactLineage: artifactLineageSchema,
+  AssetPreparationRequest: assetPreparationRequestSchema,
   AssetResult: assetResultSchema,
   BatchManifest: batchManifestSchema,
   CaptionTrack: captionTrackSchema,
@@ -145,6 +147,7 @@ export const PUBLIC_SCHEMAS = {
   EffectiveSettings: effectiveSettingsSchema,
   EvidenceRecord: evidenceRecordSchema,
   ExecutionEvent: executionEventSchema,
+  GeneratedAssetRequest: generatedAssetRequestSchema,
   JobBrief: jobBriefSchema,
   JobCreation: jobCreationSchema,
   JobProjection: jobProjectionSchema,

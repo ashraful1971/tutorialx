@@ -28,6 +28,11 @@ export function requirementsForPlan(
       );
     }
     if (scene.visual.kind === 'browser') result.capture = empty();
+    if (scene.visual.kind === 'image' || scene.visual.kind === 'video') {
+      const assets = (result.assets ??= empty());
+      assets.features.push('assets:supplied');
+      assets.modalities.push(scene.visual.kind);
+    }
   }
   for (const variant of settings.variants) {
     render.formats.push(`codec:${variant.codec}`, `container:${variant.container}`);
@@ -63,6 +68,7 @@ export function requirementsForPlan(
   for (const requirements of Object.values(result)) {
     requirements.features = [...new Set(requirements.features)];
     requirements.formats = [...new Set(requirements.formats)];
+    requirements.modalities = [...new Set(requirements.modalities)];
   }
   return result;
 }

@@ -64,7 +64,7 @@ export async function preflightPlanProviders(input: {
   const providers: ProviderPreflightSummary[] = [];
   const requirements = requirementsForPlan(plan);
 
-  for (const kind of ['renderer', 'capture', 'voice', 'alignment'] as const) {
+  for (const kind of ['renderer', 'capture', 'voice', 'alignment', 'assets'] as const) {
     const required = requirements[kind];
     if (!required) continue;
     const selection = selectedProvider(plan, kind);

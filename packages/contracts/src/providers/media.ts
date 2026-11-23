@@ -1,6 +1,14 @@
-import type { ArtifactManifest } from '../artifacts.js';
-import type { CaptureStep, FocusRegion, PlanRevision, ScenePlan } from '../planning.js';
-import type { VideoSettings } from '../settings.js';
+import { z } from 'zod';
+import { type ArtifactManifest, artifactManifestSchema } from '../artifacts.js';
+import { idSchema, microsecondsSchema, usdMicrosSchema } from '../common.js';
+import {
+  type CaptureStep,
+  type FocusRegion,
+  type PlanRevision,
+  type ScenePlan,
+  scenePlanSchema,
+} from '../planning.js';
+import { settingsSchema } from '../settings.js';
 import type { CaptionTrack, Timeline } from '../timeline.js';
 import type { BaseProvider, OperationContext, ProviderReadiness } from './descriptor.js';
 import type {
@@ -60,15 +68,39 @@ export interface AlignmentProvider extends BaseProvider<'alignment'> {
   ): Promise<AlignmentResult>;
 }
 
+export const assetPreparationRequestSchema = z.strictObject({
+  scene: scenePlanSchema,
+  supplied: z.array(artifactManifestSchema).max(2000),
+  settings: settingsSchema,
+});
+
+export const generatedAssetRequestSchema = z.strictObject({
+  sceneId: idSchema,
+  kind: z.enum(['image', 'video', 'audio']),
+  prompt: z.string().min(1).max(20_000),
+  referenceArtifactIds: z.array(idSchema).max(100),
+  requirements: z.strictObject({
+    mimeTypes: z
+      .array(z.string().regex(/^[a-z0-9.+-]+\/[a-z0-9.+-]+$/))
+      .min(1)
+      .max(20),
+    width: z.number().int().positive().max(16_384).nullable(),
+    height: z.number().int().positive().max(16_384).nullable(),
+    durationUs: microsecondsSchema.nullable(),
+  }),
+  authorization: z.strictObject({
+    reservationId: idSchema,
+    maxUsdMicros: usdMicrosSchema,
+  }),
+});
+
+export type AssetPreparationRequest = z.infer<typeof assetPreparationRequestSchema>;
+export type GeneratedAssetRequest = z.infer<typeof generatedAssetRequestSchema>;
+
 export interface AssetProvider extends BaseProvider<'assets'> {
-  prepare(
-    request: {
-      scene: ScenePlan;
-      supplied: readonly ArtifactManifest[];
-      settings: VideoSettings;
-    },
-    context: OperationContext,
-  ): Promise<AssetResult>;
+  prepare(request: AssetPreparationRequest, context: OperationContext): Promise<AssetResult>;
+  /** Optional by design: supplied-only providers do not imply generative capability. */
+  generate?(request: GeneratedAssetRequest, context: OperationContext): Promise<AssetResult>;
 }
 
 export interface RenderRequest {
