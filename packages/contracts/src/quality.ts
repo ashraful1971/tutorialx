@@ -1,6 +1,12 @@
 import { z } from 'zod';
-import { idSchema, microsecondsSchema, positiveIntegerSchema, recordShape } from './common.js';
-import { timeRangeSchema } from './timeline.js';
+import {
+  hasUniqueIds,
+  idSchema,
+  microsecondsSchema,
+  positiveIntegerSchema,
+  recordShape,
+} from './common.js';
+import { type TimeRange, timeRangeSchema } from './timeline.js';
 
 export const reviewModalitySchema = z.enum(['text', 'image', 'audio', 'video']);
 export const technicalQualityThresholdsSchema = z.strictObject({
@@ -50,6 +56,96 @@ export const qualityFindingSchema = z.strictObject({
   materialChange: z.boolean(),
 });
 
+export const reviewEvidenceSchema = z
+  .strictObject({
+    id: idSchema,
+    sceneId: idSchema,
+    kind: z.enum(['final-frame', 'final-clip', 'transcript', 'audio', 'capture']),
+    artifactId: idSchema,
+    range: timeRangeSchema,
+    modalities: z.array(reviewModalitySchema).min(1).max(4),
+  })
+  .refine((item) => {
+    const allowed: Record<typeof item.kind, readonly ReviewModality[]> = {
+      'final-frame': ['image'],
+      'final-clip': ['video', 'audio'],
+      transcript: ['text'],
+      audio: ['audio'],
+      capture: ['image', 'video'],
+    };
+    const required: Partial<Record<typeof item.kind, ReviewModality>> = {
+      'final-frame': 'image',
+      'final-clip': 'video',
+      transcript: 'text',
+      audio: 'audio',
+    };
+    return (
+      item.modalities.every((modality) => allowed[item.kind].includes(modality)) &&
+      (required[item.kind] === undefined || item.modalities.includes(required[item.kind]!))
+    );
+  }, 'Review evidence modalities must match the evidence kind.');
+
+export const reviewPackSchema = z
+  .strictObject({
+    ...recordShape,
+    jobId: idSchema,
+    planRevision: positiveIntegerSchema,
+    variantId: idSchema,
+    profileId: idSchema,
+    profileRevision: positiveIntegerSchema,
+    finalVideoArtifactId: idSchema,
+    scenes: z
+      .array(z.strictObject({ sceneId: idSchema, range: timeRangeSchema }))
+      .min(1)
+      .max(2000)
+      .refine(
+        (scenes) => new Set(scenes.map((scene) => scene.sceneId)).size === scenes.length,
+        'Duplicate review-pack scenes.',
+      ),
+    evidence: z
+      .array(reviewEvidenceSchema)
+      .min(1)
+      .max(20_000)
+      .refine(hasUniqueIds, 'Duplicate review evidence identities.'),
+    availableCoverage: z
+      .array(
+        z.strictObject({
+          sceneId: idSchema,
+          range: timeRangeSchema,
+          modalities: z.array(reviewModalitySchema).min(1).max(4),
+          evidenceIds: z.array(idSchema).min(1).max(100),
+        }),
+      )
+      .max(20_000),
+    limitations: z.array(z.string().min(1).max(2000)).max(100),
+  })
+  .refine((pack) => {
+    const scenes = new Map(pack.scenes.map((scene) => [scene.sceneId, scene.range]));
+    const evidence = new Map(pack.evidence.map((item) => [item.id, item]));
+    const inside = (sceneId: string, range: TimeRange) => {
+      const scene = scenes.get(sceneId);
+      return scene !== undefined && range.startUs >= scene.startUs && range.endUs <= scene.endUs;
+    };
+    return (
+      pack.evidence.every((item) => inside(item.sceneId, item.range)) &&
+      pack.availableCoverage.every((coverage) => {
+        const references = coverage.evidenceIds.map((id) => evidence.get(id));
+        return (
+          inside(coverage.sceneId, coverage.range) &&
+          references.every((item) => item?.sceneId === coverage.sceneId) &&
+          coverage.modalities.every((modality) =>
+            references.some(
+              (item) =>
+                item?.modalities.includes(modality) &&
+                item.range.startUs <= coverage.range.startUs &&
+                item.range.endUs >= coverage.range.endUs,
+            ),
+          )
+        );
+      })
+    );
+  }, 'Review evidence and coverage must remain inside their scene and reference known evidence.');
+
 export const reviewResultSchema = z
   .strictObject({
     ...recordShape,
@@ -85,5 +181,7 @@ export const reviewResultSchema = z
 export type QualityProfile = z.infer<typeof qualityProfileSchema>;
 export type TechnicalQualityThresholds = z.infer<typeof technicalQualityThresholdsSchema>;
 export type QualityFinding = z.infer<typeof qualityFindingSchema>;
+export type ReviewEvidence = z.infer<typeof reviewEvidenceSchema>;
+export type ReviewPack = z.infer<typeof reviewPackSchema>;
 export type ReviewResult = z.infer<typeof reviewResultSchema>;
 export type ReviewModality = z.infer<typeof reviewModalitySchema>;

@@ -72,7 +72,12 @@ import {
   providerFallbackPolicySchema,
   providerRequirementsSchema,
 } from './providers/selection.js';
-import { qualityFindingSchema, qualityProfileSchema, reviewResultSchema } from './quality.js';
+import {
+  qualityFindingSchema,
+  qualityProfileSchema,
+  reviewPackSchema,
+  reviewResultSchema,
+} from './quality.js';
 import {
   readerFormatCapabilitySchema,
   sourceMediaMetadataSchema,
@@ -167,6 +172,7 @@ export const PUBLIC_SCHEMAS = {
   ProviderRequirements: providerRequirementsSchema,
   QualityFinding: qualityFindingSchema,
   QualityProfile: qualityProfileSchema,
+  ReviewPack: reviewPackSchema,
   ReaderResult: readerResultSchema,
   ReaderFormatCapability: readerFormatCapabilitySchema,
   SourceMediaMetadata: sourceMediaMetadataSchema,

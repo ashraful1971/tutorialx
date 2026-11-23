@@ -96,7 +96,7 @@ Milestones: M1 = groups 1-5; M2 = groups 6-11; M3 = groups 12-13; M4 = groups 14
 ## 11. M2: Quality, repairs, and complete local delivery
 
 - [x] 11.1 Implement versioned quality profiles and final-media technical checks for decoding, streams, duration, variant metadata, truncation, plan-aware blank/frozen/silent intervals, loudness/peaks, and cue validity; verify deliberately defective media fails while intentional holds and silence do not.
-- [ ] 11.2 Implement review packs with scene/time evidence, final frames/clips, transcript/audio references, and modality/interval coverage; verify all scenes are represented and text-only review cannot pass required visual/audio checks.
+- [x] 11.2 Implement review packs with scene/time evidence, final frames/clips, transcript/audio references, and modality/interval coverage; verify all scenes are represented and text-only review cannot pass required visual/audio checks.
 - [ ] 11.3 Implement fresh reviewer task submissions and findings for accuracy, demo success, narration fidelity, framing, captions, pacing, and masking; verify a producer's success assertion alone cannot finalize delivery.
 - [ ] 11.4 Implement finding-to-stage repair mapping, bounded repairs, rechecks, and renewed approval for material changes; verify a music-level or caption-layout repair reuses valid capture/research and exhaustion ends in needs-attention.
 - [ ] 11.5 Implement immutable per-variant delivery packages and current-pointer commit with videos, selected subtitles/thumbnails, checksums, attribution, and quality manifests; verify partial/failed packages never replace the last accepted delivery and nothing is published externally by default.
